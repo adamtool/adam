@@ -1,0 +1,21 @@
+Q. How can I insert my own local completions without having to
+reinsert them every time you issue a new release?
+
+A. Put them in ~/.bash_completion, which is parsed at the end of the
+main completion script. See also the next question.
+
+Q. I author/maintain package X and would like to maintain my own
+completion code for this package. Where should I put it to be sure
+that interactive bash shells will find it and source it?
+
+A. Install it in one of the directories pointed to by
+bash-completion's pkgconfig file variables. There are two
+alternatives: the recommended one is 'completionsdir' (get it with
+"pkg-config --variable=completionsdir bash-completion") from which
+completions are loaded on demand based on invoked commands' names,
+so be sure to name your completion file accordingly, and to include
+for example symbolic links in case the file provides completions
+for more than one command. The other one which is present for
+backwards compatibility reasons is 'compatdir' (get it with
+"pkg-config --variable=compatdir bash-completion") from which files
+are loaded when bash_completion is loade
