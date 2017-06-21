@@ -47,5 +47,10 @@ setDeploy:
 	$(eval t=deploy)
 
 clean: setClean tools ds logic generators bounded symbolic server client
+	rm -r deploy 
 
 deploy: tools ds logic generators bounded symbolic setDeploy server client
+	mkdir deploy
+	cp ./client/ui/adam_ui.jar ./deploy/adam_ui.jar
+	cp ./server/adam_server.jar ./deploy/adam_server.jar
+	cp ./server/adam_protocol.jar ./deploy/adam_protocol.jar
