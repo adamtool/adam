@@ -1,4 +1,5 @@
 # the build target
+CORE_TARGETS = tools ds logic generators bounded symbolic
 t=jar
 
 # should be executed no matter what
@@ -47,7 +48,10 @@ setDeploy:
 clean: setClean tools ds logic generators bounded symbolic server client
 	rm -r deploy 
 
-deploy: tools ds logic generators bounded symbolic setDeploy server client
+core: $(CORE_TARGETS)
+	ant core
+
+deploy: $(CORE_TARGETS) setDeploy server client
 	mkdir -p deploy
 	cp ./client/ui/adam ./deploy/adam
 	cp ./client/ui/adam_ui.jar ./deploy/adam_ui.jar
