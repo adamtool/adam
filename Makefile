@@ -57,7 +57,7 @@ clean: setClean tools ds logic generators bounded symbolic core server client
 
 core_deploy: $(CORE_TARGETS) setStandalone core
 	mkdir -p deploy
-	cp ./core/adam_core_standalone.jar ./deploy/adam_core.jar
+	cp ./core/adam_core-standalone.jar ./deploy/adam_core.jar
 
 deploy: $(CORE_TARGETS) setDeploy server client
 	mkdir -p deploy
