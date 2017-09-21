@@ -13,6 +13,7 @@ t=jar
 .PHONY: core
 .PHONY: server
 .PHONY: client
+.PHONY: javadoc
 
 all: deploy
 
@@ -54,6 +55,10 @@ setStandalone:
 
 clean: setClean tools ds logic generators bounded symbolic core server client
 	rm -r -f deploy 
+	rm -r -f javadoc
+
+javadoc: 
+	ant javadoc
 
 core_deploy: $(CORE_TARGETS) setStandalone core
 	mkdir -p deploy
