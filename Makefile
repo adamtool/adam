@@ -10,6 +10,7 @@ t=jar
 .PHONY: generators
 .PHONY: bounded
 .PHONY: symbolic
+.PHONY: core
 .PHONY: server
 .PHONY: client
 
@@ -33,6 +34,9 @@ bounded:
 symbolic: 
 	ant -buildfile ./symbolicalgorithms/build.xml $(t)
 
+core:
+	ant -buildfile ./core/build.xml $(t)
+
 server: 
 	ant -buildfile ./server/build.xml $(t)
 
@@ -45,11 +49,15 @@ setClean:
 setDeploy:
 	$(eval t=deploy)
 
-clean: setClean tools ds logic generators bounded symbolic server client
-	rm -r deploy 
+setStandalone:
+	$(eval t=jar-standalone)
 
-core: $(CORE_TARGETS)
-	ant core
+clean: setClean tools ds logic generators bounded symbolic core server client
+	rm -r -f deploy 
+
+core_deploy: $(CORE_TARGETS) setStandalone core
+	mkdir -p deploy
+	cp ./core/adam_core_standalone.jar ./deploy/adam_core.jar
 
 deploy: $(CORE_TARGETS) setDeploy server client
 	mkdir -p deploy
