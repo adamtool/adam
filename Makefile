@@ -4,6 +4,7 @@ t=jar
 
 # should be executed no matter what
 .PHONY: clean
+.PHONY: clean-all
 .PHONY: tools
 .PHONY: ds
 .PHONY: logic
@@ -47,6 +48,9 @@ client:
 setClean:
 	$(eval t=clean)
 
+setCleanAll:
+	$(eval t=clean-all)
+
 setDeploy:
 	$(eval t=deploy)
 
@@ -54,6 +58,10 @@ setStandalone:
 	$(eval t=jar-standalone)
 
 clean: setClean tools ds logic generators bounded symbolic core server client
+	rm -r -f deploy 
+	rm -r -f javadoc
+
+clean-all: setCleanAll tools ds logic generators bounded symbolic core server client
 	rm -r -f deploy 
 	rm -r -f javadoc
 
