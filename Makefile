@@ -79,6 +79,7 @@ deploy: $(CORE_TARGETS) setDeploy server client
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
+	chmod +x ./deploy/adam
 	cp ./client/ui/adam_ui.jar ./deploy/adam_ui.jar
 	cp ./server/adam_server.jar ./deploy/adam_server.jar
 	cp ./server/adam_protocol.jar ./deploy/adam_protocol.jar
