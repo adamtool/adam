@@ -65,7 +65,7 @@ clean: setClean tools ds logic generators bounded symbolic core server client
 	rm -r -f javadoc
 
 clean-all: setCleanAll tools ds logic generators bounded symbolic core server client
-	rm -r -f deploy 
+	rm -r -f deploy
 	rm -r -f javadoc
 
 javadoc: 
@@ -87,3 +87,15 @@ deploy: $(CORE_TARGETS) setDeploy server client
 	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
 	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
 	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+
+src: clean-all
+	mkdir -p adam_tmp
+	cp -R ./lib ./adam_tmp/lib
+	cp -R --parent ./test/lib ./adam_tmp/
+	for i in $$(find . -type d \( -path ./benchmarks -o -path ./test/lib -o -path ./lib -o -path ./adam_tmp \) -prune -o -name '*' -not -regex ".*\(class\|qcir\|pdf\|tex\|apt\|dot\|jar\|ods\|txt\|tar.gz\|aux\|log\)" -type f); do \
+		echo "cp" $$i; \
+		cp --parent $$i ./adam_tmp/ ;\
+	done
+	tar -zcvf adam_src.tar.gz adam_tmp
+	rm -r -f ./adam_tmp
+
