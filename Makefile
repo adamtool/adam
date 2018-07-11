@@ -11,6 +11,7 @@ t=jar
 .PHONY: generators
 .PHONY: bounded
 .PHONY: symbolic
+.PHONY: bdd
 .PHONY: core
 .PHONY: server
 .PHONY: client
@@ -37,8 +38,10 @@ generators:
 bounded: 
 	ant -buildfile ./boundedalgorithms/build.xml $(t)
 
-symbolic: 
-	ant -buildfile ./symbolicalgorithms/build.xml $(t)
+bdd: 
+	ant -buildfile ./symbolicalgorithms/bddapproach/build.xml $(t)
+
+symbolic: bdd
 
 core:
 	ant -buildfile ./core/build.xml $(t)
