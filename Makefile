@@ -41,7 +41,10 @@ bounded:
 bdd: 
 	ant -buildfile ./symbolicalgorithms/bddapproach/build.xml $(t)
 
-symbolic: bdd
+mtbdd: 
+	ant -buildfile ./symbolicalgorithms/mtbddapproach/build.xml $(t)
+
+symbolic: bdd mtbdd
 
 core:
 	ant -buildfile ./core/build.xml $(t)
