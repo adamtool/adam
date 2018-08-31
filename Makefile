@@ -21,6 +21,22 @@ t=jar
 # the content of the excution script
 ADAM_BASHSCRIPT = "\#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam_ui.jar\" ] ; then\n\techo \"adam_ui.jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -Dlibfolder=./lib -jar \"\044BASEDIR/adam_ui.jar\" \044@"
 
+# functions
+define generate_src
+	mkdir -p adam_src
+	if [ $(1) = true ]; then\
+		cp -R ./lib ./adam_src/lib/; \
+		cp -R --parent ./test/lib ./adam_src/; \
+	fi
+	for i in $$(find . -type d \( -path ./benchmarks -o -path ./test/lib -o -path ./lib -o -path ./adam_src \) -prune -o -name '*' -not -regex ".*\(class\|qcir\|pdf\|tex\|apt\|dot\|jar\|ods\|txt\|tar.gz\|aux\|log\)" -type f); do \
+		echo "cp" $$i; \
+		cp --parent $$i ./adam_src/ ;\
+	done
+	tar -zcvf adam_src.tar.gz adam_src
+	rm -r -f ./adam_src
+endef
+
+# targets
 all: deploy
 
 tools: 
@@ -95,16 +111,11 @@ deploy: $(CORE_TARGETS) setDeploy server client
 	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
 	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
+src_withlibs: clean-all
+	$(call generate_src, true)
+
 src: clean-all
-	mkdir -p adam_src
-	cp -R ./lib ./adam_src/lib
-	cp -R --parent ./test/lib ./adam_src/
-	for i in $$(find . -type d \( -path ./benchmarks -o -path ./test/lib -o -path ./lib -o -path ./adam_src \) -prune -o -name '*' -not -regex ".*\(class\|qcir\|pdf\|tex\|apt\|dot\|jar\|ods\|txt\|tar.gz\|aux\|log\)" -type f); do \
-		echo "cp" $$i; \
-		cp --parent $$i ./adam_src/ ;\
-	done
-	tar -zcvf adam_src.tar.gz adam_src
-	rm -r -f ./adam_src
+	$(call generate_src, false)
 
 examples:
 	mkdir -p examples_tmp
