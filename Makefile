@@ -48,6 +48,9 @@ ds:
 logic: 
 	ant -buildfile ./logic/build.xml $(t)
 
+modelchecker: 
+	ant -buildfile ./modelchecking/build.xml $(t)
+
 generators: 
 	ant -buildfile ./generators/build.xml $(t)
 
@@ -83,11 +86,11 @@ setDeploy:
 setStandalone:
 	$(eval t=jar-standalone)
 
-clean: setClean tools ds logic generators bounded symbolic core server client
+clean: setClean tools ds logic modelchecker generators bounded symbolic core server client
 	rm -r -f deploy 
 	rm -r -f javadoc
 
-clean-all: setCleanAll tools ds logic generators bounded symbolic core server client
+clean-all: setCleanAll tools ds logic modelchecker generators bounded symbolic core server client
 	rm -r -f deploy
 	rm -r -f javadoc
 
@@ -98,7 +101,7 @@ core_deploy: $(CORE_TARGETS) setStandalone core
 	mkdir -p deploy
 	cp ./core/adam_core-standalone.jar ./deploy/adam_core.jar
 
-deploy: $(CORE_TARGETS) setDeploy server client
+deploy: $(CORE_TARGETS) modelchecker setDeploy server client
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
