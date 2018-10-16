@@ -1,5 +1,5 @@
 # the build target
-CORE_TARGETS = tools ds logic generators bounded symbolic
+CORE_TARGETS = tools ds logic generators bounded symbolic modelchecker
 t=jar
 
 # should be executed no matter what
@@ -28,7 +28,7 @@ define generate_src
 		cp -R ./lib ./adam_src/lib/; \
 		cp -R --parent ./test/lib ./adam_src/; \
 	fi
-	for i in $$(find . -type d \( -path ./benchmarks -o -path ./test/lib -o -path ./lib -o -path ./adam_src \) -prune -o -name '*' -not -regex ".*\(class\|qcir\|pdf\|tex\|apt\|dot\|jar\|ods\|txt\|tar.gz\|aux\|log\)" -type f); do \
+	for i in $$(find . -type d \( -path ./benchmarks -o -path ./test/lib -o -path ./lib -o -path ./adam_src \) -prune -o -name '*' -not -regex ".*\(class\|qcir\|pdf\|tex\|apt\|dot\|jar\|ods\|txt\|tar.gz\|aux\|log\|res\|aig\|aag\|lola\|cex\|properties\|json\|xml\|out\|pnml\|so\)" -type f); do \
 		echo "cp" $$i; \
 		cp --parent $$i ./adam_src/ ;\
 	done
@@ -101,7 +101,7 @@ core_deploy: $(CORE_TARGETS) setStandalone core
 	mkdir -p deploy
 	cp ./core/adam_core-standalone.jar ./deploy/adam_core.jar
 
-deploy: $(CORE_TARGETS) modelchecker setDeploy server client
+deploy: $(CORE_TARGETS) setDeploy server client
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
