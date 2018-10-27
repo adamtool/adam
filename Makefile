@@ -19,7 +19,7 @@ t=jar
 .PHONY: examples
 
 # the content of the excution script
-ADAM_BASHSCRIPT = "\#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam_ui.jar\" ] ; then\n\techo \"adam_ui.jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -Dlibfolder=./lib -jar \"\044BASEDIR/adam_ui.jar\" \044@"
+ADAM_BASHSCRIPT = "\#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam_ui.jar\" ] ; then\n\techo \"adam_ui.jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/adam_ui.jar\" \044@"
 
 # functions
 define generate_src
@@ -109,6 +109,7 @@ deploy: $(CORE_TARGETS) setDeploy server client
 	cp ./client/ui/adam_ui.jar ./deploy/adam_ui.jar
 	cp ./server/adam_server.jar ./deploy/adam_server.jar
 	cp ./server/adam_protocol.jar ./deploy/adam_protocol.jar
+	cp ./ADAM.properties ./deploy/ADAM.properties
 	cp ./lib/quabs_mac ./deploy/lib/quabs_mac
 	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
 	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
