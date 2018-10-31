@@ -19,7 +19,7 @@ t=jar
 .PHONY: examples
 
 # the content of the excution script
-ADAM_BASHSCRIPT = "\#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam_ui.jar\" ] ; then\n\techo \"adam_ui.jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/adam_ui.jar\" \044@"
+ADAM_BASHSCRIPT = "\#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam_ui.jar\" ] ; then\n\techo \"adam_ui.jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/adam_ui.jar\" \"\044@\""
 
 # functions
 define generate_src
