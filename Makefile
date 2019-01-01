@@ -1,14 +1,14 @@
 # the build target
-CORE_TARGETS = tools pnwithtransits petrigames logic formulaLogics generators bounded symbolic modelchecker
+CORE_TARGETS = tools pnwithtransits petrigames logic formulaLogics bounded symbolic modelchecker
 t=jar
 
 # should be executed no matter what
 .PHONY: clean
 .PHONY: clean-all
 .PHONY: tools
-.PHONY: ds
+.PHONY: pnwithtransits
+.PHONY: petrigames
 .PHONY: logic
-.PHONY: generators
 .PHONY: bounded
 .PHONY: symbolic
 .PHONY: bdd
@@ -57,9 +57,6 @@ logic:
 modelchecker: 
 	ant -buildfile ./modelchecking/build.xml $(t)
 
-generators: 
-	ant -buildfile ./generators/build.xml $(t)
-
 bounded: 
 	ant -buildfile ./boundedalgorithms/build.xml $(t)
 
@@ -92,11 +89,11 @@ setDeploy:
 setStandalone:
 	$(eval t=jar-standalone)
 
-clean: setClean tools petrigames pnwithtransits logic formulaLogics modelchecker generators bounded symbolic core server client
+clean: setClean tools petrigames pnwithtransits logic formulaLogics modelchecker bounded symbolic core server client
 	rm -r -f deploy 
 	rm -r -f javadoc
 
-clean-all: setCleanAll tools petrigames pnwithtransits logic formulaLogics modelchecker generators bounded symbolic core server client
+clean-all: setCleanAll tools petrigames pnwithtransits logic formulaLogics modelchecker bounded symbolic core server client
 	rm -r -f deploy
 	rm -r -f javadoc
 
