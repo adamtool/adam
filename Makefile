@@ -1,5 +1,8 @@
 # the build target
-CORE_TARGETS = tools pnwithtransits petrigames logics bounded symbolic modelchecker
+CORE_TARGETS = tools pnwithtransits
+MC_TARGETS = logics modelchecker
+SYNT_TARGETS = petrigames bounded symbolic
+UI_TARGETS = server client
 t=jar
 
 # should be executed no matter what
@@ -17,11 +20,12 @@ t=jar
 .PHONY: client
 .PHONY: javadoc
 .PHONY: examples
+.PHONY: test
 
-# the content of the excution script
-ADAM_BASHSCRIPT = "\#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam_ui.jar\" ] ; then\n\techo \"adam_ui.jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/adam_ui.jar\" \"\044@\""
 
 # functions
+create_bashscript = \#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam$(strip $(1)).jar\" ] ; then\n\techo \"adam$(strip $(1)).jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/adam$(strip $(1)).jar\" \"\044@\"
+
 define generate_src
 	mkdir -p adam_src
 	if [ $(1) = true ]; then\
@@ -83,30 +87,40 @@ setCleanAll:
 setDeploy:
 	$(eval t=deploy)
 
+setDeployMC:
+	$(eval t=deploy_mc)
+
+setDeploySynt:
+	$(eval t=deploy_synth)
+
 setStandalone:
 	$(eval t=jar-standalone)
 
-clean: setClean tools petrigames pnwithtransits logics modelchecker bounded symbolic core server client
+clean: setClean $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) $(UI_TARGETS) core
 	rm -r -f deploy 
 	rm -r -f javadoc
 
-clean-all: setCleanAll tools petrigames pnwithtransits logics modelchecker bounded symbolic core server client
+clean-all: setCleanAll $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) $(UI_TARGETS) core
 	rm -r -f deploy
 	rm -r -f javadoc
 
 javadoc: 
 	ant javadoc
 
-core_deploy: $(CORE_TARGETS) setStandalone core
+core_deploy: clean-all $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setStandalone core
 	mkdir -p deploy
 	cp ./core/adam_core-standalone.jar ./deploy/adam_core.jar
 
-deploy: $(CORE_TARGETS) setDeploy server client
+#test: 
+#	echo "$(call create_bashscript)" > ./deploy/adam
+
+deploy: $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setDeploy $(UI_TARGETS) 
 	mkdir -p deploy
 	mkdir -p deploy/lib
-	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
+	echo "$(call create_bashscript)" > ./deploy/adam
+#	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
 	chmod +x ./deploy/adam
-	cp ./client/ui/adam_ui.jar ./deploy/adam_ui.jar
+	cp ./client/ui/adam_ui.jar ./deploy/adam.jar
 	cp ./server/adam_server.jar ./deploy/adam_server.jar
 	cp ./server/adam_protocol.jar ./deploy/adam_protocol.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
@@ -115,6 +129,27 @@ deploy: $(CORE_TARGETS) setDeploy server client
 	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
 	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
+mc_deploy: $(CORE_TARGETS) $(MC_TARGETS) setDeployMC client
+	mkdir -p deploy
+	echo "$(call create_bashscript, _mc)" > ./deploy/adam_mc
+	chmod +x ./deploy/adam_mc
+	cp ./client/ui/adam_mc.jar ./deploy/adam_mc.jar
+	cp ./ADAM.properties ./deploy/ADAM.properties
+
+synt_deploy: $(CORE_TARGETS) $(SYNT_TARGETS) setDeploySynt $(UI_TARGETS) 
+	mkdir -p deploy
+	mkdir -p deploy/lib
+	echo "$(call create_bashscript, _synt)" > ./deploy/adam_synt
+	chmod +x ./deploy/adam_synt
+	cp ./client/ui/adam_synt.jar ./deploy/adam_synt.jar
+	cp ./server/adam_server.jar ./deploy/adam_server.jar
+	cp ./server/adam_protocol.jar ./deploy/adam_protocol.jar
+	cp ./ADAM.properties ./deploy/ADAM.properties
+	cp ./lib/quabs_mac ./deploy/lib/quabs_mac
+	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
+	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+	
 src_withlibs: clean-all
 	$(call generate_src, true)
 
