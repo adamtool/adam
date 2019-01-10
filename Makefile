@@ -114,7 +114,7 @@ core_deploy: clean-all $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setStandalo
 #test: 
 #	echo "$(call create_bashscript)" > ./deploy/adam
 
-deploy: $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setDeploy $(UI_TARGETS) 
+deploy: $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setDeploySynt server setDeploy client 
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript)" > ./deploy/adam
