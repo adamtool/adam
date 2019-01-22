@@ -107,7 +107,7 @@ clean-all: setCleanAll $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) $(UI_TARGET
 javadoc: 
 	ant javadoc
 
-core_deploy: clean-all $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setStandalone core
+core_deploy: $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setStandalone core
 	mkdir -p deploy
 	cp ./core/adam_core-standalone.jar ./deploy/adam_core.jar
 
