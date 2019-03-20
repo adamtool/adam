@@ -52,6 +52,9 @@ petrigames:
 pnwithtransits: 
 	ant -buildfile ./petrinetWithTransits/build.xml $(t)
 
+highlevel: 
+	ant -buildfile ./highLevel/build.xml $(t)
+
 logics: 
 	ant -buildfile ./logics/build.xml $(t)
 
