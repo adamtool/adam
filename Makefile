@@ -1,7 +1,7 @@
 # the build target
 CORE_TARGETS = tools pnwithtransits
 MC_TARGETS = logics modelchecker
-SYNT_TARGETS = petrigames bounded symbolic
+SYNT_TARGETS = petrigames bounded symbolic highlevel
 UI_TARGETS = server client
 t=jar
 
