@@ -21,7 +21,7 @@ t=jar
 .PHONY: javadoc
 .PHONY: examples
 .PHONY: test
-
+.PHONY: highlevel
 
 # functions
 create_bashscript = \#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam$(strip $(1)).jar\" ] ; then\n\techo \"adam$(strip $(1)).jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/adam$(strip $(1)).jar\" \"\044@\"
