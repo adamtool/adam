@@ -1,8 +1,13 @@
 # the build target
 CORE_TARGETS = tools pnwithtransits
 MC_TARGETS = logics modelchecker
-SYNT_TARGETS = petrigames bounded symbolic highlevel
+SYNT_TARGETS = petrigames
+BOUNDED_TARGETS = bounded
+SYMBOLIC_TARGETS = symbolic
+HL_TARGETS = highlevel
+SYNT_ALL_TARGETS = $(SYNT_TARGETS)  $(BOUNDED_TARGETS)  $(SYMBOLIC_TARGETS) $(HL_TARGETS)   
 UI_TARGETS = server client
+BACKEND_TARGETS = $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) $(BOUNDED_TARGETS) $(SYMBOLIC_TARGETS) $(HL_TARGETS)
 t=jar
 
 # should be executed no matter what
@@ -72,7 +77,7 @@ mtbdd:
 
 symbolic: bdd mtbdd
 
-core:
+interface:
 	ant -buildfile ./core/build.xml $(t)
 
 server: 
@@ -99,25 +104,25 @@ setDeploySynt:
 setStandalone:
 	$(eval t=jar-standalone)
 
-clean: setClean $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) $(UI_TARGETS) core
+clean: setClean $(BACKEND_TARGETS) $(UI_TARGETS) interface
 	rm -r -f deploy 
 	rm -r -f javadoc
 
-clean-all: setCleanAll $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) $(UI_TARGETS) core
+clean-all: setCleanAll $(BACKEND_TARGETS) $(UI_TARGETS) interface
 	rm -r -f deploy
 	rm -r -f javadoc
 
 javadoc: 
 	ant javadoc
 
-core_deploy: $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setStandalone core
+core_deploy: $(BACKEND_TARGETS) setStandalone interface
 	mkdir -p deploy
 	cp ./core/adam_core-standalone.jar ./deploy/adam_core.jar
 
 #test: 
 #	echo "$(call create_bashscript)" > ./deploy/adam
 
-deploy: $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) setDeploySynt server setDeploy client 
+deploy: $(BACKEND_TARGETS) setDeploySynt server setDeploy client 
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript)" > ./deploy/adam
