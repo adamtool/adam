@@ -101,6 +101,9 @@ setDeployMC:
 setDeploySynt:
 	$(eval t=deploy_synth)
 
+setDeployBounded:
+	$(eval t=deploy_bounded)
+
 setStandalone:
 	$(eval t=jar-standalone)
 
@@ -144,6 +147,13 @@ mc_deploy: $(CORE_TARGETS) $(MC_TARGETS) setDeployMC client
 	cp ./client/ui/adam_mc.jar ./deploy/adam_mc.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
+mc_deploy_noUI: $(BACKEND_TARGETS) setDeployMC interface
+	mkdir -p deploy
+	echo "$(call create_bashscript, _mc)" > ./deploy/adam_mc
+	chmod +x ./deploy/adam_mc
+	cp ./core/adam_mc.jar ./deploy/adam_mc.jar
+	cp ./ADAM.properties ./deploy/ADAM.properties
+
 synt_deploy: $(CORE_TARGETS) $(SYNT_TARGETS) setDeploySynt $(UI_TARGETS) 
 	mkdir -p deploy
 	mkdir -p deploy/lib
@@ -157,7 +167,23 @@ synt_deploy: $(CORE_TARGETS) $(SYNT_TARGETS) setDeploySynt $(UI_TARGETS)
 	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
 	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
 	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+
+synt_deploy_noUI: $(BACKEND_TARGETS) setDeploySynt interface 
+	mkdir -p deploy
+	mkdir -p deploy/lib
+	echo "$(call create_bashscript, _synt)" > ./deploy/adam_synt
+	chmod +x ./deploy/adam_synt
+	cp ./core/adam_synt.jar ./deploy/adam_synt.jar
+	cp ./ADAM.properties ./deploy/ADAM.properties
+	cp ./lib/quabs_mac ./deploy/lib/quabs_mac
+	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
+	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 	
+bounded_deploy_noUI: $(BACKEND_TARGETS) setDeployBounded interface 
+	mkdir -p deploy
+	cp ./core/adam_bounded.jar ./deploy/adam_bounded.jar
+
 src_withlibs: clean-all
 	$(call generate_src, true)
 
