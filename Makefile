@@ -118,9 +118,9 @@ clean-all: setCleanAll $(BACKEND_TARGETS) $(UI_TARGETS) interface
 javadoc: 
 	ant javadoc
 
-core_deploy: $(BACKEND_TARGETS) setStandalone interface
+core_deploy: $(BACKEND_TARGETS) setDeploy interface
 	mkdir -p deploy
-	cp ./core/adam_core-standalone.jar ./deploy/adam_core.jar
+	cp ./core/adam_core.jar ./deploy/adam_core.jar
 
 #test: 
 #	echo "$(call create_bashscript)" > ./deploy/adam
