@@ -5,7 +5,7 @@ SYNT_TARGETS = petrigames
 BOUNDED_TARGETS = bounded
 SYMBOLIC_TARGETS = symbolic
 HL_TARGETS = highlevel
-SYNT_ALL_TARGETS = $(SYNT_TARGETS)  $(BOUNDED_TARGETS)  $(SYMBOLIC_TARGETS) $(HL_TARGETS)   
+SYNT_ALL_TARGETS = $(SYNT_TARGETS)  $(BOUNDED_TARGETS)  $(SYMBOLIC_TARGETS) $(HL_TARGETS)
 UI_TARGETS = server client
 BACKEND_TARGETS = $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_TARGETS) $(BOUNDED_TARGETS) $(SYMBOLIC_TARGETS) $(HL_TARGETS)
 t=jar
@@ -48,31 +48,31 @@ endef
 # targets
 all: deploy
 
-tools: 
+tools:
 	ant -buildfile ./tools/build.xml $(t)
 
-petrigames: 
+petrigames:
 	ant -buildfile ./petriGames/build.xml $(t)
 
-pnwithtransits: 
+pnwithtransits:
 	ant -buildfile ./petrinetWithTransits/build.xml $(t)
 
-highlevel: 
+highlevel:
 	ant -buildfile ./highLevel/build.xml $(t)
 
-logics: 
+logics:
 	ant -buildfile ./logics/build.xml $(t)
 
-modelchecker: 
+modelchecker:
 	ant -buildfile ./modelchecking/build.xml $(t)
 
-bounded: 
+bounded:
 	ant -buildfile ./boundedalgorithms/build.xml $(t)
 
-bdd: 
+bdd:
 	ant -buildfile ./symbolicalgorithms/bddapproach/build.xml $(t)
 
-mtbdd: 
+mtbdd:
 	ant -buildfile ./symbolicalgorithms/mtbddapproach/build.xml $(t)
 
 symbolic: bdd mtbdd
@@ -80,10 +80,10 @@ symbolic: bdd mtbdd
 interface:
 	ant -buildfile ./core/build.xml $(t)
 
-server: 
+server:
 	ant -buildfile ./server/build.xml $(t)
 
-client: 
+client:
 	ant -buildfile ./client/ui/build.xml $(t)
 
 setClean:
@@ -108,24 +108,24 @@ setStandalone:
 	$(eval t=jar-standalone)
 
 clean: setClean $(BACKEND_TARGETS) $(UI_TARGETS) interface
-	rm -r -f deploy 
+	rm -r -f deploy
 	rm -r -f javadoc
 
 clean-all: setCleanAll $(BACKEND_TARGETS) $(UI_TARGETS) interface
 	rm -r -f deploy
 	rm -r -f javadoc
 
-javadoc: 
+javadoc:
 	ant javadoc
 
 core_deploy: $(BACKEND_TARGETS) setDeploy interface
 	mkdir -p deploy
 	cp ./core/adam_core.jar ./deploy/adam_core.jar
 
-#test: 
+#test:
 #	echo "$(call create_bashscript)" > ./deploy/adam
 
-deploy: $(BACKEND_TARGETS) setDeploySynt server setDeploy client 
+deploy: $(BACKEND_TARGETS) setDeploySynt server setDeploy client
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript)" > ./deploy/adam
@@ -154,7 +154,7 @@ mc_deploy_noUI: $(BACKEND_TARGETS) setDeployMC interface
 	cp ./core/adam_mc.jar ./deploy/adam_mc.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
-synt_deploy: $(CORE_TARGETS) $(SYNT_TARGETS) setDeploySynt $(UI_TARGETS) 
+synt_deploy: $(CORE_TARGETS) $(SYNT_TARGETS) setDeploySynt $(UI_TARGETS)
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript, _synt)" > ./deploy/adam_synt
@@ -168,7 +168,7 @@ synt_deploy: $(CORE_TARGETS) $(SYNT_TARGETS) setDeploySynt $(UI_TARGETS)
 	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
 	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
-synt_deploy_noUI: $(BACKEND_TARGETS) setDeploySynt interface 
+synt_deploy_noUI: $(BACKEND_TARGETS) setDeploySynt interface
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript, _synt)" > ./deploy/adam_synt
@@ -179,11 +179,11 @@ synt_deploy_noUI: $(BACKEND_TARGETS) setDeploySynt interface
 	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
 	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
 	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
-	
-bounded_deploy_noUI: $(BACKEND_TARGETS) setDeployBounded interface 
+
+bounded_deploy_noUI: $(BACKEND_TARGETS) setDeployBounded interface
 	mkdir -p deploy
 	echo "$(call create_bashscript, _bounded)" > ./deploy/adam_bounded
-	chmod +x ./deploy/adam_synt
+	chmod +x ./deploy/adam_bounded
 	cp ./core/adam_bounded.jar ./deploy/adam_bounded.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
