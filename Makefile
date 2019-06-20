@@ -183,6 +183,7 @@ synt_deploy_noUI: $(BACKEND_TARGETS) setDeploySynt interface
 bounded_deploy_noUI: $(BACKEND_TARGETS) setDeployBounded interface 
 	mkdir -p deploy
 	echo "$(call create_bashscript, _bounded)" > ./deploy/adam_bounded
+	chmod +x ./deploy/adam_synt
 	cp ./core/adam_bounded.jar ./deploy/adam_bounded.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
