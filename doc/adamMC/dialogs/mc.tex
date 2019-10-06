@@ -1,0 +1,34 @@
+usage: sh adam.sh mc -c <property> | -f <LTL | Flow-LTL formula> [-circ] [-d]  -i <file> [-l
+       <file>] [-max <arg>] [-o <file>] [-p <abcParameters>] [-pnml] [-psst] [-s] [-stats]
+       [-t] [-v] [-veri <verifier>]
+Modelchecking Flow-LTL on Petri nets with flows or LTL on safe Petri nets with inhibitor arcs.
+ -c,--check <property>                   The standard property to check. Possible values:
+                                         deadlock | reversible | quasiLive | live
+ -circ,--circuit                         Saves the created circuit of the net as PDF.
+ -d,--debug                              Get some debug infos.
+ -f,--formula <LTL | Flow-LTL formula>   The formula, either Flow-LTL or LTL, which should be
+                                         checked.
+ -i,--input <file>                       The path to the input file in APT format, which
+                                         should be examined.
+ -l,--logger <file>                      The path to an optional logger file. If it's not set,
+                                         the information will be send to the terminal.
+ -max,--maximality <arg>                 States which kind of maximality should be used.
+                                         Possible values: IntC (interleaving calculated within
+                                         the circuit)  | IntF (interleaving added to the
+                                         formula)  | ConF (concurrent added to the formula)  |
+                                         NONE. Standard is NONE.
+ -o,--output <file>                      The path for the optional output.
+ -p,--abcParameters <abcParameters>      Parameters for the verifier / falsifier.
+ -pnml                                   Standard is to read the file in the APT format. With
+                                         this option we can directly read a file in PNML
+                                         format.
+ -psst,--silent                          Makes the tool voiceless.
+ -s,--skip                               Skips the tests like 1-bounded. Saves time, but
+                                         should only be used if you are asure that your net
+                                         fullfills  all necessary preconditions!
+ -stats,--statistics                     Calculates and prints some statistics for the call.
+ -t,--trans                              Saves the transformed net in APT format and, in the
+                                         case that dot is executable, as PDF.
+ -v,--verbose                            Makes the tool chatty.
+ -veri,--verifier <verifier>             The verifier which should be used. Possible values:
+                                         IC3 | INT | BMC | BMC2 |BMC3. Standard is IC3

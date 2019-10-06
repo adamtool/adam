@@ -1,0 +1,11 @@
+usage: sh adam.sh pnwt2pdf [-d] -i <file> [-l <file>] [-o <file>] [-psst] [-v]
+Converts a Petri net with transits in APT format to a pdf file by using Graphviz (dot has to
+be executable).
+ -d,--debug           Get some debug infos.
+ -i,--input <file>    The path to the input file in APT format, which should be examined.
+ -l,--logger <file>   The path to an optional logger file. If it's not set, the information
+                      will be send to the terminal.
+ -o,--output <file>   The path to the output file. If it's not given the path from the input
+                      file is used.
+ -psst,--silent       Makes the tool voiceless.
+ -v,--verbose         Makes the tool chatty.
