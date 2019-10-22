@@ -1,0 +1,523 @@
+\documentclass[12pt,twoside,a4paper,openright]{memoir}
+%\usepackage{createspace}
+%\usepackage[size=pocket,noicc]{createspace}
+%\usepackage[paperwidth=4.25in, paperheight=6.875in,bindingoffset=.75in]{geometry}
+\usepackage[paperwidth=8.3in, paperheight=11.7in]{geometry}
+
+\usepackage{ltl}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newunicodechar}
+\newunicodechar{◇}{\LTLfinally}
+%globally = 'G' | '⬜';
+%next = 'X' | '◯';
+%neg = 'NEG' | '!' | '¬';
+%and = 'AND' | '⋏' ;
+%or = 'OR' | '⋎' ;
+%imp = 'IMP' | '->' | '→' ;
+%bimp = 'BIMP' | '<->' | '↔';
+%until = 'U' | '𝓤';
+%weak = 'W' | '𝓦';
+%release = 'R' | '𝓡';
+
+%// FlowFormula
+%forallFlows = 'A' | '𝔸';
+
+%// RunFormula
+%rbin = rand | ror;
+%rand = 'AND' | '⋀';
+%ror = 'OR' | '⋁';
+%rimp = 'IMP' | '->' | '⇒';
+%tt = 'TRUE' | '⊤';
+%ff = 'FALSE' | '⊥';
+
+\usepackage[english]{babel}
+%\usepackage{tgtermes}
+
+%\usepackage{mathpazo}
+%\usepackage[protrusion=true,expansion=true]{microtype}
+%\usepackage{type1cm}
+%\usepackage{lettrine}
+
+%\checkandfixthelayout
+
+% See the ``Memoir customise'' template for some common customisations
+% Don't forget to read the Memoir manual: memman.pdf
+
+%\title{TITLE OF BOOK}
+%\author{NAME OF AUTHOR}
+%\date{} % Delete this line to display the current date
+
+\chapterstyle{bianchi}
+\setsecnumdepth{subsection}
+\setcounter{tocdepth}{3}
+
+\usepackage{adamMC}
+
+\usepackage{breakurl}
+\usepackage[
+	plainpages=false,
+	pdfpagelabels,
+	breaklinks=true,
+	a4paper,
+	bookmarks,
+	bookmarksopen=true,
+	bookmarksnumbered=true,
+	pdfauthor={Manuel Gieseking},
+	pdftitle={AdamMC: A User's Guide},
+]{hyperref}
+\usepackage{import}
+\usepackage{todonotes}
+
+%% BEGIN TITLE
+
+\makeatletter
+\def\maketitle{%
+  \null
+  \thispagestyle{empty}%
+  \vfill
+  \begin{center}\leavevmode
+    \normalfont
+    {\LARGE\raggedleft \@author\par}%
+    \hrulefill\par
+    {\huge\raggedright \@title\par}%
+    \vskip 1cm
+%    {\Large \@date\par}%
+  \end{center}%
+  \vfill
+  \null
+	\hfill
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushright}
+			{\large A \textbf{Flow-LTL Model Checker} for the Analysis of Distributed Asynchronous Models}\\
+			\vspace*{2mm}
+			{\large \href{https://uol.de/csd/adam/}{https://uol.de/csd/adamMC/}}\\
+%			{\large Version 1.0}\\
+%			{\large \@date}
+			\vspace*{3mm}
+			{\large Version 1.0 -- \@date}
+		\end{flushright}
+	\end{minipage}
+	\hspace*{2mm}
+  \cleardoublepage
+}
+\makeatother
+%\author{NAME OF AUTHOR}
+\title{\adamMC{} -- A User's Guide}
+\date{\today}
+
+
+\usepackage{filecontents}
+\usepackage{natbib}
+\usepackage{bibentry}
+
+\bibliographystyle{plainnat}
+\begin{filecontents}{bib.bib}
+@article{DBLP:journals/corr/FinkbeinerGHO19,
+  author    = {Bernd Finkbeiner and Manuel Gieseking and Jesko Hecking-Harbusch and Ernst{-}R{\"u}diger Olderog},
+  title     = {Model Checking Data Flows in Concurrent Network Updates (Full Version)},
+  journal   = {arXiv preprint arXiv:1907.11061},
+  year      = {2019},
+  url       = {https://arxiv.org/abs/1907.11061}
+}
+@inproceedings{DBLP:conf/atva/FinkbeinerGHO19,
+  author = {Bernd Finkbeiner and Manuel Gieseking and Jesko Hecking-Harbusch and Ernst-R{\"{u}}diger Olderog},
+  title = {Model Checking Data Flows in Concurrent Network Updates},
+  booktitle = {accepted at Automated Technology for Verification and Analysis - 16th International Symposium, {ATVA} 2019},
+  year = {2019} }
+\end{filecontents}
+
+
+%%% BEGIN DOCUMENT
+
+\begin{document}
+
+\let\cleardoublepage\clearpage
+\begin{picture}(0,0)
+\put(400,-583){
+\rule{1pt}{\textheight} % Vertical line
+\hspace{1mm}
+%\hspace{2mm}
+\rule{1pt}{\textheight} % Vertical line
+\hspace{1mm}
+\rule{1pt}{\textheight} % Vertical line
+%\hspace{1mm}
+\rule{1pt}{\textheight} % Vertical line
+\rule{1pt}{\textheight} % Vertical line
+\rule{1pt}{\textheight} % Vertical line
+\rule{1pt}{\textheight} % Vertical line
+}
+\end{picture}
+\maketitle
+\frontmatter
+\mainmatter
+\sloppy
+
+%%%%%%%% CONTENT GOES HERE
+\tableofcontents
+
+\chapter{About \tool}
+\tool{} is a model checker providing three different kind of input domains
+for asynchronous distributed systems:
+software-defined networks \& Flow-LTL, Petri nets with transits \& Flow-LTL,
+and 1-bounded Petri nets \& LTL.
+Internally it reduces the problems to a verification problem of circuits
+which is checked by \href{https://people.eecs.berkeley.edu/~alanmi/abc/}{ABC},
+a large toolbox of hardware verification algorithms.
+
+In \emph{software-defined networks (SDNs)} the \emph{data plane} of a network is separated 
+of the \emph{control plane} to allow for a simplified network management.
+\emph{Flow-LTL} is a linear temporal logic to separately reason with LTL about the control plane
+and also with LTL about the data plane.
+\tool{} allows for checking SDNs with \emph{concurrent overlapping updates}, i.e.,
+updates which can be rolled out concurrently during the network's execution
+without demanding a package to be either routed by the initial or the final configuration but
+allow for a mixture.
+In addition to Flow-LTL formulas standard properties like
+\emph{connectivity}, \emph{loop freedom}, \emph{drop freedom}, and \emph{packet coherence}
+can be checked.
+
+Internally, Petri nets with transits are used to represent SDNs with updates.
+\emph{Petri nets with transits} refine the flow relation of standard 1-bounded Petri nets
+to allow for the modeling of the precise flow of the data. 
+In general Petri nets with transits can be used to distinguish the flow of tokens 
+in a Petri net in cases where the additional complexity introduced by Colored Petri nets
+is not needed.
+Further application domains apart from SDNs are for example the flow of work pieces in a \emph{smart factory}
+or the flow of people in \emph{access control} scenarios.
+
+Internally, this problem is reduced to the checking of 1-bounded Petri nets against LTL.
+\emph{Petri nets} are one of the most suitable formalism to model asynchronous systems
+with a high degree of concurrency. \tool{} takes Petri nets in \href{http://www.pnml.org/}{PNML}
+or \href{https://github.com/CvO-Theory/apt/}{APT} format.
+
+\tool{} is a command line tool,
+which once started does not allow any further interaction.
+It does not provide a graphical interface for the input models
+but provide automatically created outputs using the \href{http://www.graphviz.org/}{DOT}
+format of Graphviz. Detailed information about the background can be found here:
+
+\vspace*{10mm}
+\nobibliography{bib}
+\noindent
+\bibentry{DBLP:conf/atva/FinkbeinerGHO19}
+
+\vspace*{5mm}
+\noindent
+\bibentry{DBLP:journals/corr/FinkbeinerGHO19}
+
+\chapter{Setting up \tool}
+\section{Download}
+The most recent version of \tool{} can be found at \href{https://uol.de/csd/adammc/}{https://uol.de/csd/adamMC/}.
+At the given address additionally to the binary JAR file the corresponding source code is provided.
+The license is GNU GPLv3, for details please see the COPYING file provided in the main folder.
+\section{Dependencies}
+\tool{} needs \href{}{Java} in a version \(\geq 9\) and uses the following external tools for dedicated subprocesses:
+\begin{itemize}
+\item Mandatory:
+\begin{itemize}
+  \item \href{https://www.react.uni-saarland.de/tools/mchyper/}{MCHyper}
+  \item \href{https://people.eecs.berkeley.edu/~alanmi/abc/}{ABC}
+  \item \href{http://fmv.jku.at/aiger/}{Aigertools} (aigtoaig and aigtodot)
+\end{itemize}
+	\item Optional:
+\begin{itemize}
+  \item \href{http://www.graphviz.org/}{DOT} in a version \(\geq 2.36.0\). For the visualization of the input and intermediate results.
+%	\item \href{Unix time command}{time}. For measuring times used by ABC or MCHyper.\todo{do it properly}
+\end{itemize}
+\end{itemize}
+Note that we adapted MCHyper such that formulas can be read from a file and increased an offset such that
+larger formulas can be handled. Also the output is slightly adapted.
+A patch to integrate the changes is provided in the tarball.
+
+Furthermore, \tool{} uses the following libraries included in the JAR file:
+\begin{itemize}
+	\item \href{https://github.com/CvO-Theory/apt/}{APT}
+	\item \href{https://commons.apache.org/proper/commons-cli/}{Apache commons-cli-1.2}
+	\item \href{https://commons.apache.org/proper/commons-collections/}{Apache commons-collections4-4.0}
+	\item \href{https://commons.apache.org/proper/commons-io/}{Apache commons-io-2.4}
+	\item \href{https://www.antlr.org/}{antlr-4.5.1}
+\end{itemize}
+Finally, \tool{} is integrated into the \href{https://uol.de/csd/adam/}{ADAM} framework.
+
+\section{Installation}
+For unpacking the downloaded tarball into the current directory
+navigate to the file and type
+\begin{lstlisting}[language=bash]
+  $ tar -xf adam_mc.tar.gz
+\end{lstlisting}
+For the external tools please consult the documented installation processes
+provided by the given websites. For MCHyper please firstly apply the patch \texttt{mchyper.patch}
+located in the \texttt{res} folder to the downloaded sources, i.e., navigate 
+to the extracted main folder of MCHyper \texttt{mchyper-0.91}
+\begin{lstlisting}[language=bash]
+  $ cd mchyper-0.91
+  $ patch -p1 < <mainfolder>/res/mchyper.patch 
+\end{lstlisting}
+Add the corresponding paths to the installed binaries to the \texttt{ADAM.properties} file
+for example like this:
+\begin{lstlisting}[language=bash]
+aigertools=/home/user/tools/aiger/
+mcHyper=/home/user/tools/mchyper-0.91/mchyper
+abcBin=/home/user/tools/abc/abc
+dot=dot
+time=/usr/bin/time
+\end{lstlisting}
+Now \tool{} is easily started by the given bash script
+\begin{lstlisting}[language=bash]
+$ ./adam_mc
+\end{lstlisting}
+or direct by calling java with
+\begin{lstlisting}[language=bash]
+$ java -DPROPERTY_FILE=./ADAM.properties -jar adam_mc.jar
+\end{lstlisting}
+When so far everything went fine, you should see a list of available modules.
+For some example calls of \tool{} please see Sec.~\ref{sec:usage}.
+
+For having a bash completion for \tool{} you find a file \texttt{adammc\_bash\_completion}
+in the folder \texttt{todo} of the tarball.
+Please refer to the guidelines of your OS to integrate those into your bash. \todo{todo}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Usage of \tool}
+\label{sec:usage}
+The usage of \tool{} should be self-explanatory by the printable helping dialogues.
+%As a first step to see if \tool{} works properly type
+Calling \tool{} with
+\begin{lstlisting}[language=bash]
+  $ ./adam_mc
+\end{lstlisting}
+lists the available modules like
+\lstinputlisting[mathescape]{dialogs/ui.tex}\todo{adapt the module list}
+Calling a module without any parameter results in a helping dialog printing 
+the available and needed parameters. For a complete list see App.~\ref{app:detailedModules}.
+
+There are different kind of modules.
+The module \texttt{pnwt2dot} and \texttt{pnwt2pdf} are
+used the visualize Petri net with transits with the help of Graphviz.
+The modules \texttt{mc} and \texttt{sdn\_mc} are the model checking modules.
+The module \texttt{mc} allows for model checking Petri net with transits against Flow-LTL
+and standard 1-bounded Petri nets against LTL.
+The module \texttt{sdn\_mc} is used for the software-defined network scenarios.
+The remaining modules are used to generate example Petri nets with transits.  
+
+You can find several examples for each of the three different 
+application areas of \tool{} in the \texttt{examples} folder of the tarball.
+In the following we list some example calls
+with the resulting output:\todo{todo}
+\begin{lstlisting}[language=bash]
+  $ ./adam_mc
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{File Formats}
+\section{The Input Formats}
+\subsection{Petri Nets}
+Petri nets can be given to \tool{} in the Petri Net Markup Language (\href{http://www.pnml.org/}{PNML})
+and in the \href{https://github.com/CvO-Theory/apt}{APT} format.
+Since the format of Petri nets with transits in Sec.~\ref{sec:format_pnwt} extends the APT format,
+we shortly introduce this format here.
+
+An input file in APT format contains sections for places (\emph{.places}), transitions (\emph{.transitions}) 
+and the connections between them (\emph{.flows}). You have to name the Petri net
+(\emph{.name "my name"}) and set its type (\emph{.type LPN}). If you like to, you can give a 
+description of the net with \emph{.description "lorem"}.
+This is the only string which allows line breaks.
+In general white spaces are ignored and comments are allowed in C syntax. 
+The section \emph{.initial\_marking} contains the initial marking of the Petri net.
+Thus, either whole lines can be commented by //, or an area is commented starting with /* and ending with */.
+As an example the Petri net presented in Fig.~\ref{} is 
+given in APT format in \todo{}.
+\begin{lstlisting}[captionpos=b, caption=Simplified Grammar of the APT format for labeled Petri nets, label = lst:grammar,language=ebnf]
+pn     		= ( description | flows | initialMarking |
+ 				name | netOptions | places | transitions | type )*
+name   		= '.name' STR
+type   		= '.type' ('LPN' | 'PN')
+description = '.description' (STR | STR_MULTI)
+netOptions  = '.options' (option (',' option)*)?
+
+places      = '.places' place*
+place       =  (ID | NAT) (opts)? 
+
+transitions = '.transitions' transition*
+transition  = (ID | NAT) (opts)? 
+
+opts 		= '[' option (',' option)* ']'
+option 		= 	ID '=' STR | ID '=' NAT	| ID '=' NEGNAT |
+				ID '=' DOUBLE	| ID
+	
+flows 		= '.flows' flow*
+flow  		= (ID | NAT) ':'  set '->' set (opts)?
+
+set			= '{' ( | obj (',' obj)*) '}'
+obj			= NAT '*' (ID | NAT) | (ID | NAT)
+
+initialMarking = '.initial_marking' (set)?
+
+NAT			=  ('0'..'9')+
+NEGNAT		= '-' ('0'..'9')+
+DOUBLE		= '-'? ('0'..'9')+ '.' ('0'..'9')+
+ID			= ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+
+COMMENT		= ('//' ~('\n'|'\r')*	|   '/*' (. )*? '*/')
+WS			= ( ' ' | '\n' | '\r' | '\t')
+
+STR			= '"' ~('"' | '\n' | '\r' | '\t')*  '"'
+STR_MULTI	= '"' ~('"' | '\t' )*  '"'
+\end{lstlisting}
+
+\subsection{Petri Nets with Transits}
+\label{sec:format_pnwt}
+The APT format allows to equip places or transitions with additional information.
+We exploit this generality to obtain a input format for Petri nets with transits.
+We add for every transition with transit the definition of the transits to the keyword \emph{tfl}.
+This definition contains a comma separated list of transits.
+Each transit states the preset place where the flow comes from, or the special character \(>\) if a flow is newly
+started and a set of postset places where the flow is transited to.
+For example for a transition \todo{add example}
+We additionally allow to mark a transition as weak or as strong fair by the keyword \emph{weakFair} or \emph{strongFair}, respectively.
+%i s a comma s e p a r a t e d l i s t o f a p r e s e t p l a c e −> s e t o f p o s t s e t p l a c e s
+\begin{lstlisting}[captionpos=b, caption=Grammar for the Transit Relation of Petri Nets with Transit, label = lst:grammar,language=ebnf]
+tfl		= (flow (',' flow)*) EOF
+
+flow  	= init '->' set
+init  	= (obj | GR)
+
+set		= '{' ( obj (',' obj)*) '}'
+obj		=	ID | INT
+
+INT 	= '0'..'9'+
+ID  	= ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+GR  	= '>'
+
+COMMENT	= ('//' ~('\n'|'\r')* | '/*' (. )*? '*/')
+WS		= ( ' ' | '\n' | '\r' | '\t')
+\end{lstlisting}
+
+\subsection{Software Defined Networks and Concurrent Overlapping Updates}
+\begin{lstlisting}[captionpos=b, caption=Grammar for the Topology and the Initial Configuration of SDNs, label = lst:grammar,language=ebnf]
+ts			= name  description?  genOptions?  switches  cons
+			  ingress  egress  forwarding EOF
+name		= '.name' STR
+description	= '.description' (STR | STR_MULTI)
+genOptions  = '.options' (option (',' option)*)?
+
+switches	= '.switches' switchT*
+switchT		= sw (opts)?
+
+opts		= '[' option (',' option)* ']'
+option		= ID '=' STR
+
+cons		= '.connections' con*
+con			= sw sw (opts)?
+
+sw			= ID | NAT
+
+ingress     = '.ingress=' set
+egress      = '.egress=' set
+
+set         = '{' ( sw (',' sw)*) '}'
+
+forwarding  = '.forwarding' forward*
+forward     = sw '.fwd(' sw ')'
+
+NAT         = '0'..'9'+
+ID			= ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+
+STR			= '"' ~('"' | '\n' | '\r' | '\t')*  '"'
+STR_MULTI	= '"' ~('"' | '\t' )*  '"'
+
+COMMENT		= ('//' ~('\n'|'\r')* | '/*' (. )*? '*/')
+WS		    = ( ' ' | '\n' | '\r' | '\t')
+\end{lstlisting}
+\begin{lstlisting}[captionpos=b, caption=Grammar of the Concurrent Overlapping Updates of SDNs, label = lst:grammar,language=ebnf]
+result     	= update EOF
+update      = swUpdate | seqUpdate | parUpdate
+
+swUpdate    = 'upd(' idi '.fwd(' sidi ('/' idi)? '))'
+seqUpdate   = '[' update (SEQ update)* ']'
+parUpdate   = '[' update (PAR update)* ']'
+
+sidi		= idi | '-'
+idi 		= ID | INT
+
+PAR 		= '||'
+SEQ 		= '>>'
+
+INT			= '0'..'9'+
+ID  		= ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+
+COMMENT		= ('//' ~('\n'|'\r')* | '/*' (. )*? '*/')
+WS			= ( ' ' | '\n' | '\r' | '\t')
+\end{lstlisting}
+
+\subsection{LTL and Flow-LTL}
+\begin{lstlisting}[captionpos=b, caption=Grammar of Flow-LTL, label = lst:grammar,language=ebnf]
+flowLTL 		= runFormula EOF
+
+runFormula 		= ltl | '(' ltl rimp runFormula ')' | runBinary | flowFormula
+runBinary 		= '(' runFormula rbin runFormula ')'
+flowFormula 	= forallFlows ltl
+
+ltl 			= ltlUnary | ltlBinary | tt | ff | atom
+ltlUnary 		= unaryOp ltl
+ltlBinary 		= '(' ltl binaryOp ltl ')'
+
+atom 			= ID | INT
+
+// LTL
+unaryOp 		= (ltlFinally | globally | next | neg)
+binaryOp 		= (and | or | imp | bimp | until | weak | release )
+ltlFinally 		= 'F'
+globally 		= 'G'
+next 			= 'X'
+neg 			= 'NEG' | '!'
+and 			= 'AND'
+or 				= 'OR' 
+imp				= 'IMP' | '->'
+bimp			= 'BIMP' | '<->'
+until 			= 'U'
+weak 			= 'W'
+release 		= 'R'
+
+// FlowFormula
+forallFlows 	= 'A'
+
+// RunFormula
+rbin 			= rand | ror
+rand 			= 'AND'
+ror				= 'OR'
+rimp 			= 'IMP' | '->'
+
+tt 				= 'TRUE'
+ff 				= 'FALSE'
+
+INT 			= '0'..'9'+
+ID  			= ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+
+COMMENT			= ('//' ~('\n'|'\r')* | '/*' (. )*? '*/')
+WS				= ( ' ' | '\n' | '\r' | '\t')
+\end{lstlisting}
+\section{The Output Formats}
+
+
+\chapter{Contact}
+We appreciate your feedback on \tool{}. Please send any bugs, comments, or
+questions to:
+\begin{center}
+ manuel.gieseking(at)informatik.uni-oldenburg.de
+\end{center}
+%Have fun using \tool{}!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\chapter{Detailed List of Modules and Parameters}
+\label{app:detailedModules}
+In the following we list the help dialogues of each module.
+That is, how to call the module, the possible 
+and needed parameters including their explanations.
+\begin{subappendices}
+\subimport{./dialogs/}{helpDialogs}
+\end{subappendices}
+\end{document}
