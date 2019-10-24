@@ -1,15 +1,18 @@
-usage: sh adam.sh gen_mc_rm_node_update [-con] [-d] [-l <file>] -nb1 <numberOf_nodes> [-npdf]
-       -o <file> [-psst] [-v]
-Generates a network which has a update function to detour exactly one node (the node is chosen
-randomly). Saves the resulting net in APT and, if dot is executable, as pdf.
- -con,--connectivity                Adds the formula checking connectivity to the net
-                                    inscription.
+usage: sh adam.sh gen_mc_rm_node_update [-con] [-d] [-l <file>] -nb1
+       <numberOf_nodes> [-npdf] -o <file> [-psst] [-v]
+Generates a network which has an update function to detour exactly one
+node (the node is chosen randomly). Saves the resulting net in APT and, if
+dot is executable, as pdf.
+ -con,--connectivity                Adds the formula checking connectivity
+                                    to the net inscription.
  -d,--debug                         Get some debug infos.
- -l,--logger <file>                 The path to an optional logger file. If it's not set, the
-                                    information will be send to the terminal.
+ -l,--logger <file>                 The path to an optional logger file.
+                                    If it's not set, the information will
+                                    be send to the terminal.
  -nb1,--nb_nodes <numberOf_nodes>   The desired number of node (>= 3).
- -npdf,--noPDF                      Does not create a pdf of the generated net.
- -o,--output <file>                 The output path where the generated Petri net with flows
-                                    should be saved.
+ -npdf,--noPDF                      Does not create a pdf of the generated
+                                    net.
+ -o,--output <file>                 The output path where the generated
+                                    Petri net with flows should be saved.
  -psst,--silent                     Makes the tool voiceless.
  -v,--verbose                       Makes the tool chatty.

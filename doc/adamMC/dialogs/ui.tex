@@ -1,30 +1,37 @@
 Usage: sh adam.sh <module> or java -jar adam.jar <module>
 Available modules:
-  pnwt2dot                       Converts a Petri net with transits in APT format to a dot
-                                 file.
-  pnwt2pdf                       Converts a Petri net with transits in APT format to a pdf
-                                 file by using Graphviz (dot has to be executable).
-  mc                             Modelchecking Flow-LTL on Petri nets with flows or LTL on
-                                 safe Petri nets with inhibitor arcs.
-  sdn_mc                         Modelchecking Software Defined Networks.
-  benchCAV2019                   Just for benchmark purposes. Model checks nets and formulas
-                                 for CAV 2019.
-  export                         Exports some data from the tool.
-  gen_mc_rm_node_update          Generates a network which has a update function to detour
-                                 exactly one node (the node is chosen randomly). Saves the
-                                 resulting net in APT and, if dot is executable, as pdf.
-  gen_mc_redundant_flow_network  Generates a network which has to ways to the output. A update
-                                 function can block one of the ways. This can be done in
-                                 correct or incorrect ways. Saves the resulting net in APT
-                                 and, if dot is executable, as pdf.
-  gen_topologie_zoo              Generates a network from the topology given by the input
-                                 file. Saves the resulting net in APT and, if dot is
+  pnwt2dot                       Converts a Petri net with transits to a
+                                 dot file.
+  pnwt2pdf                       Converts a Petri net with transits to a
+                                 pdf file by using Graphviz (dot has to be
+                                 executable).
+  sdn2dot                        Converts a Software Defined Networks
+                                 topology (with an concurrent update) to a
+                                 Petri net with transits and saves this to
+                                 a dot file.
+  sdn2pdf                        Converts a Software Defined Networks
+                                 topology (with an concurrent update) to a
+                                 Petri net with transits and saves this to
+                                 a pdf file by using Graphviz (dot has to
+                                 be executable).
+  mc_pn                          Modelchecking 1-bounded Petri nets with
+                                 inhibitor arcs against LTL.
+  mc_pnwt                        Modelchecking Petri nets with transits
+                                 against FlowLTL  or LTL.
+  mc_sdn                         Modelchecking Software Defined Networks
+                                 with concurrent updates.
+  gen_mc_rm_node_update          Generates a network which has an update
+                                 function to detour exactly one node (the
+                                 node is chosen randomly). Saves the
+                                 resulting net in APT and, if dot is
                                  executable, as pdf.
-  gen_mc_smart_factory           Generates a smart factory which can create 'nb_products'
-                                 products. There
-                                 are 'nb_shared_machines' machines which are shared by all
-                                 products, and
-                                 'nb_special_machines' machines which are just responsable for
-                                 the
-                                 creation of one type of product. Saves the resulting net in
-                                 APT and, if dot is executable, as pdf.
+  gen_mc_redundant_flow_network  Generates a network which has two ways to
+                                 the output. A update function can block
+                                 one of the ways. This can be done in
+                                 correct or incorrect ways. Saves the
+                                 resulting net in APT and, if dot is
+                                 executable, as pdf.
+  gen_topologie_zoo              Generates a network from the topology
+                                 given by the input file. Saves the
+                                 resulting net in APT and, if dot is
+                                 executable, as pdf.

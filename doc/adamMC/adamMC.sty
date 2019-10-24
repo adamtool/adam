@@ -42,6 +42,23 @@ basicstyle=\scriptsize
 	numbers=none,
 }
 
+\lstdefinelanguage{sdn-format}
+{
+	morekeywords=[1]{.name, .type, .description, .switches, .connections, .ingress, .egress, .forwarding},
+	alsoletter={.},
+	keywordstyle=[1]\color{cdc_BlueM},
+	morecomment=[s][\color{darkred}]{"}{"},
+	morecomment=[s][\color{cdc_Green}]{/*}{*/},
+	morecomment=[l][\color{cdc_Green}]{//},
+	escapeinside={\%*}{*)},
+	frame=single,
+	%backgroundcolor=\color{lstColor},
+	breaklines=true,
+	xleftmargin=5pt,
+	xrightmargin = 5pt,
+	numbers=none,
+}
+
 \lstdefinelanguage{ebnf}
 {
 	morecomment=[s][\color{darkred}]{'}{'},

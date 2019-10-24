@@ -275,9 +275,9 @@ $ java -DPROPERTY_FILE=./ADAM.properties -jar adam_mc.jar
 When so far everything went fine, you should see a list of available modules.
 For some example calls of \tool{} please see Sec.~\ref{sec:usage}.
 
-For having a bash completion for \tool{} you find a file \texttt{adammc\_bash\_completion}
-in the folder \texttt{todo} of the tarball.
-Please refer to the guidelines of your OS to integrate those into your bash. \todo{todo}
+%For having a bash completion for \tool{} you find a file \texttt{adammc\_bash\_completion}
+%in the folder \texttt{todo} of the tarball.
+%Please refer to the guidelines of your OS to integrate those into your bash. \todo{todo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Usage of \tool}
@@ -289,27 +289,62 @@ Calling \tool{} with
   $ ./adam_mc
 \end{lstlisting}
 lists the available modules like
-\lstinputlisting[mathescape]{dialogs/ui.tex}\todo{adapt the module list}
+\lstinputlisting[mathescape]{dialogs/ui.tex}
 Calling a module without any parameter results in a helping dialog printing 
 the available and needed parameters. For a complete list see App.~\ref{app:detailedModules}.
 
 There are different kind of modules.
-The module \texttt{pnwt2dot} and \texttt{pnwt2pdf} are
-used the visualize Petri net with transits with the help of Graphviz.
-The modules \texttt{mc} and \texttt{sdn\_mc} are the model checking modules.
-The module \texttt{mc} allows for model checking Petri net with transits against Flow-LTL
-and standard 1-bounded Petri nets against LTL.
-The module \texttt{sdn\_mc} is used for the software-defined network scenarios.
+The module \texttt{*2dot} and \texttt{*2pdf} are
+used the visualize Petri net with transits or SDNs with the help of Graphviz.
+The module \texttt{mc\_pnwt} allows for model checking Petri net with transits against Flow-LTL
+and module \texttt{mc\_pn} for standard 1-bounded Petri nets against LTL.
+The module \texttt{mc\_sdn} is used for the software-defined network scenarios.
 The remaining modules are used to generate example Petri nets with transits.  
 
 You can find several examples for each of the three different 
 application areas of \tool{} in the \texttt{examples} folder of the tarball.
 In the following we list some example calls
-with the resulting output:\todo{todo}
-\begin{lstlisting}[language=bash]
-  $ ./adam_mc
+with the resulting output:
+\begin{lstlisting}[captionpos=b, caption=Example calls for checking Petri nets with transits against Flow-LTL., label=lst:pnwtFlow-LTLEx, language=bash,breaklines=true]
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/detour5.apt -f "A F pOut"  # UNSAT
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/detour5.apt -f "(((F G (p2 AND (pup AND pIn)) IMP G F tup) AND ((F G (pOut AND p3) IMP G F t4) AND ((F G (p3 AND p2) IMP G F t3) AND ((F G (p1 AND pIn) IMP G F t0) AND (F G (p1 AND p2) IMP G F t2))))) IMP A F pOut)"  # SAT 
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/detour5.apt -f "(((F G (p2 AND (pup AND pIn)) IMP G F tup) AND ((F G (pOut AND p3) IMP G F t4) AND ((F G (p3 AND p2) IMP G F t3) AND ((F G (p1 AND pIn) IMP G F t0) AND (F G (p1 AND p2) IMP G F t2))))) IMP A F pOut)" -app seqIn # SAT 
+## with fairness assumptions in APT file
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/twoWays33C.apt -f "A F out" -app parIn -v # UNSAT
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/twoWays33C.apt -f "(NEG G F (tupD OR tupU) IMP A F out)" -app parIn -cr_abc # SAT
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/twoWays33C.apt -f "(G F createFlows IMP (NEG G F (tupD OR tupU) IMP A F out))" -app parIn -max NONE # SAT
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/factory.apt -f "((m_w AND m_i) IMP A ((G NEG F db_w AND F sdb_1) AND F vA_w))" -app parIn -stuck GFo # SAT
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/factory.apt -f "(F m_w AND db_w)" -app parIn -max IntC -veri "IC3|BMC2|BMC3" -stats "" # UNSAT
+  $ ./adam_mc mc_pnwt -i ./examples/pnwt-flowltl/factory.apt -f "A ((F m_w AND F db_w) AND F vA_w)" -app parIn -max IntC # SAT
 \end{lstlisting}
+\begin{lstlisting}[captionpos=b, caption=Example calls for checking Petri nets against LTL., label=lst:pnLTLEx, language=bash,breaklines=true]
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/AutoFlight-PT-04a/model.pnml -pnml -f "NEG (p73 AND NEG p74)" -psst # SAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/AutoFlight-PT-24a/model.pnml -pnml -f "(NEG p453 OR p129)" -v # SAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/BusinessProcesses-PT-01/model.pnml -pnml -f "FALSE" -veri "IC3|BMC2" # UNSAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/BusinessProcesses-PT-01/model.pnml -pnml -f "G X F G p171" -veri "BMC3" # UNSAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/DES-PT-02a/model.pnml -pnml -f "F F (FALSE U NEG (p35 AND NEG p93))" -veri "IC3" # SAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/DES-PT-02a/model.pnml -pnml -f "(NEG (p66 AND NEG p51) U (NEG (p94 AND NEG p73) U NEG (p47 AND NEG p7)))" -max IntF -v # SAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/Dekker-PT-010/model.pnml -pnml -f "F NEG (p34 AND NEG p0_8)"  -stats "" # SAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/Dekker-PT-010/model.pnml -pnml -f "G G G F NEG (p0_9 AND NEG flag_0_4)"  -veri "IC3|BMC2" # UNSAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/Raft-PT-05/model.pnml -pnml -f "X G X F NEG (p62 AND NEG p120)" -veri "IC3|BMC3" # UNSAT
+  $ ./adam_mc mc_pn -i ./examples/pn-ltl/Raft-PT-05/model.pnml -pnml -f "G p43" -veri "BMC2" -max NONE -psst # UNSAT
+\end{lstlisting}
+\begin{lstlisting}[captionpos=b, caption=Example calls for checking SDNs with updates.,label = lst:sdnEx, language=bash,breaklines=true]
+  $ ./adam_mc mc_sdn -i ./examples/sdn/pipelineTopology.txt -u "[[upd(s1.fwd(s3/s2)) >> upd(s2.fwd(-/s4))] || upd(s3.fwd(s5))]" -f "A F (s4 OR s5)" # SAT
+  $ ./adam_mc mc_sdn -i ./examples/sdn/pipelineTopology.txt -u "[[upd(s1.fwd(s3/s2)) >> upd(s2.fwd(-/s4))] || upd(s3.fwd(s5))]" -c loopFreedom -v # SAT
+  $ ./adam_mc mc_sdn -i ./examples/sdn/pipelineTopology.txt -u "[upd(s1.fwd(s4/s2)) >> upd(s2.fwd(-/s4))]" -c connectivity # SAT
+  $ ./adam_mc mc_sdn -i ./examples/sdn/pipelineTopology.txt -u "[upd(s1.fwd(s4/s2)) >> upd(s2.fwd(-/s4))]" -f "A F s2" -t # UNSAT
+  $ ./adam_mc mc_sdn -i ./examples/sdn/pipelineTopology.txt -u "[upd(s2.fwd(s3/s4)) >> upd(s3.fwd(s5))]" -c dropFreedom # SAT
+  $ ./adam_mc mc_sdn -i ./examples/sdn/campus.txt -u "[[upd(S.fwd(C/A)) >> upd(L.fwd(P/C))] || upd(C.fwd(L/P))]" -c dropFreedom # SAT
+  $ ./adam_mc mc_sdn -i ./examples/sdn/campus.txt -u "[[upd(S.fwd(C/A)) >> upd(L.fwd(P/C))] || upd(C.fwd(L/P))]" -c connectivity # SAT
+  $ ./adam_mc mc_sdn -i ./examples/sdn/campus.txt -u "[[upd(S.fwd(C/A)) >> upd(L.fwd(P/C))] || upd(C.fwd(L/P))]" -c loopFreedom # SAT
+\end{lstlisting}
+%
+These calls are provided as bash scripts \texttt{pnwt-FlowLTLExamples}, \texttt{pn-LTLExamples}, \texttt{sdnExamples}
+in the main folder.
 
+To compare your own settings for the optimizations of \tool{} on your benchmark families, we provide 
+example scripts in the folder \texttt{compare}. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{File Formats}
 \section{The Input Formats}
@@ -327,9 +362,9 @@ This is the only string which allows line breaks.
 In general white spaces are ignored and comments are allowed in C syntax. 
 The section \emph{.initial\_marking} contains the initial marking of the Petri net.
 Thus, either whole lines can be commented by //, or an area is commented starting with /* and ending with */.
-As an example the Petri net presented in Fig.~\ref{} is 
-given in APT format in \todo{}.
-\begin{lstlisting}[captionpos=b, caption=Simplified Grammar of the APT format for labeled Petri nets, label = lst:grammar,language=ebnf]
+%As an example the Petri net presented in Fig.~\ref{} is 
+%given in APT format in \todo{}.
+\begin{lstlisting}[captionpos=b, caption=Simplified grammar of the APT format for labeled Petri nets., label = lst:grammar,language=ebnf]
 pn     		= ( description | flows | initialMarking |
  				name | netOptions | places | transitions | type )*
 name   		= '.name' STR
@@ -375,10 +410,64 @@ We add for every transition with transit the definition of the transits to the k
 This definition contains a comma separated list of transits.
 Each transit states the preset place where the flow comes from, or the special character \(>\) if a flow is newly
 started and a set of postset places where the flow is transited to.
-For example for a transition \todo{add example}
 We additionally allow to mark a transition as weak or as strong fair by the keyword \emph{weakFair} or \emph{strongFair}, respectively.
-%i s a comma s e p a r a t e d l i s t o f a p r e s e t p l a c e −> s e t o f p o s t s e t p l a c e s
-\begin{lstlisting}[captionpos=b, caption=Grammar for the Transit Relation of Petri Nets with Transit, label = lst:grammar,language=ebnf]
+As an example see the following Petri net with transits:
+\begin{lstlisting}[captionpos=b, caption=An example Petri net with transits in \tool{}'s format., label = lst:grammar,language=apt-format]
+.name "twoWays33C"
+.type LPN
+
+.places
+in
+mD
+mU
+mutex
+out[reach="true"]
+p0
+p1
+p2
+p3
+p4
+p5
+pupD
+pupU
+
+.transitions
+createFlows[label="createFlows", tfl="in -> {in},> -> {in}"]
+mtD[label="mtD", tfl="pupD -> {p3}"]
+mtU[label="mtU", tfl="pupU -> {p0}"]
+resD[label="resD", strongFair="true", tfl="in -> {in},pupD -> {in}"]
+resU[label="resU", strongFair="true", tfl="in -> {in},pupU -> {in}"]
+tD0[label="tD0", strongFair="true", tfl="p3 -> {p3},in -> {p3}"]
+tD1[label="tD1", strongFair="true", tfl="p3 -> {p4},p4 -> {p4}"]
+tD2[label="tD2", strongFair="true", tfl="p4 -> {p5},p5 -> {p5}"]
+tDout[label="tDout", strongFair="true", tfl="p5 -> {out},out -> {out}"]
+tU0[label="tU0", strongFair="true", tfl="p0 -> {p0},in -> {p0}"]
+tU1[label="tU1", strongFair="true", tfl="p0 -> {p1},p1 -> {p1}"]
+tU2[label="tU2", strongFair="true", tfl="p1 -> {p2},p2 -> {p2}"]
+tUout[label="tUout", strongFair="true", tfl="p2 -> {out},out -> {out}"]
+tupD[label="tupD", tfl="p3 -> {pupD}"]
+tupU[label="tupU", tfl="p0 -> {pupU}"]
+
+.flows
+createFlows: {1*in} -> {1*in}
+mtD: {1*pupD, 1*mD} -> {1*mutex, 1*p3}
+mtU: {1*mU, 1*pupU} -> {1*p0, 1*mutex}
+resD: {1*pupD, 1*in} -> {1*pupD, 1*in}
+resU: {1*pupU, 1*in} -> {1*pupU, 1*in}
+tD0: {1*in, 1*p3} -> {1*in, 1*p3}
+tD1: {1*p3, 1*p4} -> {1*p3, 1*p4}
+tD2: {1*p4, 1*p5} -> {1*p4, 1*p5}
+tDout: {1*out, 1*p5} -> {1*out, 1*p5}
+tU0: {1*p0, 1*in} -> {1*in, 1*p0}
+tU1: {1*p1, 1*p0} -> {1*p0, 1*p1}
+tU2: {1*p2, 1*p1} -> {1*p2, 1*p1}
+tUout: {1*out, 1*p2} -> {1*out, 1*p2}
+tupD: {1*mutex, 1*p3} -> {1*pupD, 1*mD}
+tupU: {1*p0, 1*mutex} -> {1*pupU, 1*mU}
+
+.initial_marking {1*in, 1*mutex, 1*out, 1*p0, 1*p1, 1*p2, 1*p3, 1*p4, 1*p5}
+\end{lstlisting}
+\begin{lstlisting}[captionpos=b, caption=Grammar of the transit relation of Petri nets with transits., label = lst:grammar,language=ebnf]
 tfl		= (flow (',' flow)*) EOF
 
 flow  	= init '->' set
@@ -396,7 +485,37 @@ WS		= ( ' ' | '\n' | '\r' | '\t')
 \end{lstlisting}
 
 \subsection{Software Defined Networks and Concurrent Overlapping Updates}
-\begin{lstlisting}[captionpos=b, caption=Grammar for the Topology and the Initial Configuration of SDNs, label = lst:grammar,language=ebnf]
+For SDNs \tool{} provides an input format to describe a topology with an
+initial configuration. As an example see the following file:
+\begin{lstlisting}[captionpos=b, caption=Example for a topology and inital configuration of an SDN., label = lst:grammar,language=sdn-format]
+.name "campus"
+.switches
+S
+A
+C
+P
+L
+ 
+.connections
+S A
+S C
+A C
+C P
+C L
+P L
+
+.ingress={S}
+.egress={P}
+
+// initial config
+.forwarding
+S.fwd(A)
+A.fwd(C)
+L.fwd(C)
+C.fwd(P)
+\end{lstlisting}
+
+\begin{lstlisting}[captionpos=b, caption=Grammar of the topology and the initial configuration of SDNs., label = lst:grammar,language=ebnf]
 ts			= name  description?  genOptions?  switches  cons
 			  ingress  egress  forwarding EOF
 name		= '.name' STR
@@ -431,7 +550,9 @@ STR_MULTI	= '"' ~('"' | '\t' )*  '"'
 COMMENT		= ('//' ~('\n'|'\r')* | '/*' (. )*? '*/')
 WS		    = ( ' ' | '\n' | '\r' | '\t')
 \end{lstlisting}
-\begin{lstlisting}[captionpos=b, caption=Grammar of the Concurrent Overlapping Updates of SDNs, label = lst:grammar,language=ebnf]
+Furthermore, \tool{} provides a parser for the concurrent overlapping updates.
+For an examples please see the updates in the example calls of Listing~\ref{lst:sdnEx}.
+\begin{lstlisting}[captionpos=b, caption=Grammar of the concurrent overlapping updates of SDNs., label = lst:grammar,language=ebnf]
 result     	= update EOF
 update      = swUpdate | seqUpdate | parUpdate
 
@@ -453,7 +574,9 @@ WS			= ( ' ' | '\n' | '\r' | '\t')
 \end{lstlisting}
 
 \subsection{LTL and Flow-LTL}
-\begin{lstlisting}[captionpos=b, caption=Grammar of Flow-LTL, label = lst:grammar,language=ebnf]
+\tool{} also provides a parser for the temporal logics LTL and Flow-LTL. 
+For examples please see the example calls of \tool{} of Listing~\ref{lst:pnLTLEx} and Listing~\ref{lst:pnwtFlow-LTLEx}.
+\begin{lstlisting}[captionpos=b, caption=Grammar of the temporal logics Flow-LTL, label = lst:grammar,language=ebnf]
 flowLTL 		= runFormula EOF
 
 runFormula 		= ltl | '(' ltl rimp runFormula ')' | runBinary | flowFormula
@@ -499,7 +622,7 @@ ID  			= ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
 COMMENT			= ('//' ~('\n'|'\r')* | '/*' (. )*? '*/')
 WS				= ( ' ' | '\n' | '\r' | '\t')
 \end{lstlisting}
-\section{The Output Formats}
+%\section{The Output Formats}
 
 
 \chapter{Contact}

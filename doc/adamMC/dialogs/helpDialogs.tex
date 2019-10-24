@@ -1,33 +1,30 @@
 \subsection*{Module: pnwt2dot}
-Converts a Petri net with transits in APT format to a dot file. The help dialogue: 
+Converts a Petri net with transits to a dot file. The help dialogue: 
 \lstinputlisting[mathescape]{pnwt2dot.tex}
 \subsection*{Module: pnwt2pdf}
-Converts a Petri net with transits in APT format to a pdf file by using Graphviz (dot has to be executable). The help dialogue: 
+Converts a Petri net with transits to a pdf file by using Graphviz (dot has to be executable). The help dialogue: 
 \lstinputlisting[mathescape]{pnwt2pdf.tex}
-\subsection*{Module: mc}
-Modelchecking Flow-LTL on Petri nets with flows or LTL on safe Petri nets with inhibitor arcs. The help dialogue: 
-\lstinputlisting[mathescape]{mc.tex}
-\subsection*{Module: sdn\_mc}
-Modelchecking Software Defined Networks. The help dialogue: 
-\lstinputlisting[mathescape]{sdn_mc.tex}
-\subsection*{Module: benchCAV2019}
-Just for benchmark purposes. Model checks nets and formulas for CAV 2019. The help dialogue: 
-\lstinputlisting[mathescape]{benchCAV2019.tex}
-\subsection*{Module: export}
-Exports some data from the tool. The help dialogue: 
-\lstinputlisting[mathescape]{export.tex}
+\subsection*{Module: sdn2dot}
+Converts a Software Defined Networks topology (with an concurrent update) to a Petri net with transits and saves this to a dot file. The help dialogue: 
+\lstinputlisting[mathescape]{sdn2dot.tex}
+\subsection*{Module: sdn2pdf}
+Converts a Software Defined Networks topology (with an concurrent update) to a Petri net with transits and saves this to a pdf file by using Graphviz (dot has to be executable). The help dialogue: 
+\lstinputlisting[mathescape]{sdn2pdf.tex}
+\subsection*{Module: mc\_pn}
+Modelchecking 1-bounded Petri nets with inhibitor arcs against LTL. The help dialogue: 
+\lstinputlisting[mathescape]{mc_pn.tex}
+\subsection*{Module: mc\_pnwt}
+Modelchecking Petri nets with transits against FlowLTL  or LTL. The help dialogue: 
+\lstinputlisting[mathescape]{mc_pnwt.tex}
+\subsection*{Module: mc\_sdn}
+Modelchecking Software Defined Networks with concurrent updates. The help dialogue: 
+\lstinputlisting[mathescape]{mc_sdn.tex}
 \subsection*{Module: gen\_mc\_rm\_node\_update}
-Generates a network which has a update function to detour exactly one node (the node is chosen randomly). Saves the resulting net in APT and, if dot is executable, as pdf. The help dialogue: 
+Generates a network which has an update function to detour exactly one node (the node is chosen randomly). Saves the resulting net in APT and, if dot is executable, as pdf. The help dialogue: 
 \lstinputlisting[mathescape]{gen_mc_rm_node_update.tex}
 \subsection*{Module: gen\_mc\_redundant\_flow\_network}
-Generates a network which has to ways to the output. A update function can block one of the ways. This can be done in correct or incorrect ways. Saves the resulting net in APT and, if dot is executable, as pdf. The help dialogue: 
+Generates a network which has two ways to the output. A update function can block one of the ways. This can be done in correct or incorrect ways. Saves the resulting net in APT and, if dot is executable, as pdf. The help dialogue: 
 \lstinputlisting[mathescape]{gen_mc_redundant_flow_network.tex}
 \subsection*{Module: gen\_topologie\_zoo}
 Generates a network from the topology given by the input file. Saves the resulting net in APT and, if dot is executable, as pdf. The help dialogue: 
 \lstinputlisting[mathescape]{gen_topologie_zoo.tex}
-\subsection*{Module: gen\_mc\_smart\_factory}
-Generates a smart factory which can create 'nb\_products' products. There
- are 'nb\_shared\_machines' machines which are shared by all products, and
-'nb\_special\_machines' machines which are just responsable for the
- creation of one type of product. Saves the resulting net in APT and, if dot is executable, as pdf. The help dialogue: 
-\lstinputlisting[mathescape]{gen_mc_smart_factory.tex}
