@@ -242,6 +242,7 @@ Furthermore, \tool{} uses the following libraries included in the JAR file:
 Finally, \tool{} is integrated into the \href{https://uol.de/csd/adam/}{ADAM} framework.
 
 \section{Installation}
+\label{sec:installation}
 For unpacking the downloaded tarball into the current directory
 navigate to the file and type
 \begin{lstlisting}[language=bash]
@@ -278,6 +279,61 @@ For some example calls of \tool{} please see Sec.~\ref{sec:usage}.
 %For having a bash completion for \tool{} you find a file \texttt{adammc\_bash\_completion}
 %in the folder \texttt{todo} of the tarball.
 %Please refer to the guidelines of your OS to integrate those into your bash. \todo{todo}
+
+\section{Compiling from Source}
+For compiling the provided sources the \emph{make} script in the main folder can be used.
+For also using the tests the following jars have to be put into \texttt{./test/lib/}:
+\begin{itemize}
+\item \href{https://github.com/jboss-javassist/javassist}{javassist-3.21.0.GA}
+\item \href{https://github.com/cbeust/testng}{testng-6.9.9}
+\item \href{http://scannotation.sourceforge.net/}{scannotation-1.0.2}
+\end{itemize}
+%
+You can either change the \texttt{build.properties} of each module
+(\texttt{client/ui}, \texttt{logics}, \texttt{modelchecking}, \texttt{petrinetWithTransits}, \texttt{tools})
+or you put the above mentioned libraries
+(%
+\href{https://github.com/CvO-Theory/apt/}{APT},
+\href{https://commons.apache.org/proper/commons-cli/}{Apache commons-cli-1.2},
+\href{https://commons.apache.org/proper/commons-collections/}{Apache commons-collections4-4.0},
+\href{https://commons.apache.org/proper/commons-io/}{Apache commons-io-2.4},
+\href{https://www.antlr.org/}{antlr-4.5.1}%
+) into the \texttt{./lib/} folder.
+Either you use the naming and folder structure \emph{ant} will tell you while compiling or you adapt the \texttt{libs.res} 
+and \texttt{testlibs.res} for each module.
+%
+With
+\begin{lstlisting}[language=bash]
+$ make
+\end{lstlisting}
+a new folder \texttt{./deploy} is created containing the binary, a bash script for calling \tool{}, and the \texttt{ADAM.properties}
+copied from the main source folder (you have to adapt the path as mentioned in Section~\ref{sec:installation}).
+For deleting all created files you can use
+\begin{lstlisting}[language=bash]
+$ make clean
+\end{lstlisting}
+or to also delete the created files from the test
+\begin{lstlisting}[language=bash]
+$ make clean-all
+\end{lstlisting}
+can be used.
+
+The tests for each module can be executed with the help of \emph{ant}.
+For each module providing tests you can choose to run all test, a test class, or a test-method. 
+For example for the model checking module you can use
+\begin{lstlisting}[language=bash]
+$  ant test
+\end{lstlisting}
+to run all tests provided (i.e., all classes in \texttt{test} annotated with \texttt{@Test}). With 
+\begin{lstlisting}[language=bash,breaklines=true]
+$ ant test-class -Dclass.name=uniolunisaar.adam.modelchecker.libraries.TestingMCHyper
+\end{lstlisting}
+the complete class \emph{TestingMCHyper} is run. However,
+\begin{lstlisting}[language=bash,breaklines=true]
+$ ant test-method -Dclass.name=uniolunisaar.adam.modelchecker.circuits.TestingModelcheckingFlowLTLParallel -Dmethod.name=updatingNetworkExample
+\end{lstlisting}
+tests the specific method \emph{updatingNetworkExample} of the class \emph{TestingMCHyper}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Usage of \tool}
