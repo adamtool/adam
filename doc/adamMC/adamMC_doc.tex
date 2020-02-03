@@ -55,6 +55,22 @@
 
 \usepackage{adamMC}
 
+\usepackage{tikz}
+\usetikzlibrary{calc, shapes, arrows, positioning, snakes,petri,backgrounds, hobby, patterns, decorations.markings}
+\tikzstyle{beamer_arrow}=[ultra thick,> = latex']
+\tikzstyle{envplace}=[circle,thick,draw=black!75,fill=white,minimum size=6mm]
+\tikzset{
+flow/.style n args=2{thick,->,shorten >=1pt, shorten <=1pt, #1, #2},
+flowA/.style ={flow={cdc_Blue}{dotted}},
+flowB/.style ={flow={cdc_Green}{dashed}},
+flowC/.style ={flow={Red}{dashdotted}},
+control/.style ={flow={black}{}}
+}
+
+
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+
 \usepackage{breakurl}
 \usepackage[
 	plainpages=false,
@@ -124,7 +140,7 @@
 @inproceedings{DBLP:conf/atva/FinkbeinerGHO19,
   author = {Bernd Finkbeiner and Manuel Gieseking and Jesko Hecking-Harbusch and Ernst-R{\"{u}}diger Olderog},
   title = {Model Checking Data Flows in Concurrent Network Updates},
-  booktitle = {accepted at Automated Technology for Verification and Analysis - 16th International Symposium, {ATVA} 2019},
+  booktitle = {Automated Technology for Verification and Analysis - 16th International Symposium, {ATVA} 2019},
   year = {2019} }
 \end{filecontents}
 
@@ -416,8 +432,9 @@ and the connections between them (\emph{.flows}). You have to name the Petri net
 description of the net with \emph{.description "lorem"}.
 This is the only string which allows line breaks.
 In general white spaces are ignored and comments are allowed in C syntax. 
-The section \emph{.initial\_marking} contains the initial marking of the Petri net.
 Thus, either whole lines can be commented by //, or an area is commented starting with /* and ending with */.
+The section \emph{.initial\_marking} contains the initial marking of the Petri net.
+A simplified grammar for Petri nets in APT format is given by:
 %As an example the Petri net presented in Fig.~\ref{} is 
 %given in APT format in \todo{}.
 \begin{lstlisting}[captionpos=b, caption=Simplified grammar of the APT format for labeled Petri nets., label = lst:grammar,language=ebnf]
@@ -488,21 +505,21 @@ pupD
 pupU
 
 .transitions
-createFlows[label="createFlows", tfl="in -> {in},> -> {in}"]
-mtD[label="mtD", tfl="pupD -> {p3}"]
-mtU[label="mtU", tfl="pupU -> {p0}"]
-resD[label="resD", strongFair="true", tfl="in -> {in},pupD -> {in}"]
-resU[label="resU", strongFair="true", tfl="in -> {in},pupU -> {in}"]
-tD0[label="tD0", strongFair="true", tfl="p3 -> {p3},in -> {p3}"]
-tD1[label="tD1", strongFair="true", tfl="p3 -> {p4},p4 -> {p4}"]
-tD2[label="tD2", strongFair="true", tfl="p4 -> {p5},p5 -> {p5}"]
-tDout[label="tDout", strongFair="true", tfl="p5 -> {out},out -> {out}"]
-tU0[label="tU0", strongFair="true", tfl="p0 -> {p0},in -> {p0}"]
-tU1[label="tU1", strongFair="true", tfl="p0 -> {p1},p1 -> {p1}"]
-tU2[label="tU2", strongFair="true", tfl="p1 -> {p2},p2 -> {p2}"]
-tUout[label="tUout", strongFair="true", tfl="p2 -> {out},out -> {out}"]
-tupD[label="tupD", tfl="p3 -> {pupD}"]
-tupU[label="tupU", tfl="p0 -> {pupU}"]
+createFlows[tfl="in -> {in},> -> {in}"]
+mtD[tfl="pupD -> {p3}"]
+mtU[tfl="pupU -> {p0}"]
+resD[strongFair="true", tfl="in -> {in},pupD -> {in}"]
+resU[strongFair="true", tfl="in -> {in},pupU -> {in}"]
+tD0[strongFair="true", tfl="p3 -> {p3},in -> {p3}"]
+tD1[strongFair="true", tfl="p3 -> {p4},p4 -> {p4}"]
+tD2[strongFair="true", tfl="p4 -> {p5},p5 -> {p5}"]
+tDout[strongFair="true", tfl="p5 -> {out},out -> {out}"]
+tU0[strongFair="true", tfl="p0 -> {p0},in -> {p0}"]
+tU1[strongFair="true", tfl="p0 -> {p1},p1 -> {p1}"]
+tU2[strongFair="true", tfl="p1 -> {p2},p2 -> {p2}"]
+tUout[strongFair="true", tfl="p2 -> {out},out -> {out}"]
+tupD[tfl="p3 -> {pupD}"]
+tupU[tfl="p0 -> {pupU}"]
 
 .flows
 createFlows: {1*in} -> {1*in}
@@ -523,6 +540,12 @@ tupU: {1*p0, 1*mutex} -> {1*pupU, 1*mU}
 
 .initial_marking {1*in, 1*mutex, 1*out, 1*p0, 1*p1, 1*p2, 1*p3, 1*p4, 1*p5}
 \end{lstlisting}
+%\begin{figure}[t]
+%\centering
+%\input{./figures/pnwt_example}
+%	\label{fig:pnwt_example}
+%\end{figure}
+The grammar of the transit relation is given by the following listing:
 \begin{lstlisting}[captionpos=b, caption=Grammar of the transit relation of Petri nets with transits., label = lst:grammar,language=ebnf]
 tfl		= (flow (',' flow)*) EOF
 
@@ -542,8 +565,8 @@ WS		= ( ' ' | '\n' | '\r' | '\t')
 
 \subsection{Software Defined Networks and Concurrent Overlapping Updates}
 For SDNs \tool{} provides an input format to describe a topology with an
-initial configuration. As an example see the following file:
-\begin{lstlisting}[captionpos=b, caption=Example for a topology and inital configuration of an SDN., label = lst:grammar,language=sdn-format]
+initial configuration. As an example see the input file in Listing~\ref{lst:topology}.
+\begin{lstlisting}[captionpos=b, caption=Example for a topology and inital configuration of an SDN., label = lst:topology,language=sdn-format]
 .name "campus"
 .switches
 S
@@ -570,7 +593,105 @@ A.fwd(C)
 L.fwd(C)
 C.fwd(P)
 \end{lstlisting}
+We define a network with five switches S, A, C, P, and L,
+with an ingress node S and an egress node P.
+The connections of the topology and the forwardings of the initial configuration can be seen in Fig.~\ref{fig:topology}.
+%
+\begin{figure}[t]
+\centering
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+\begin{tikzpicture}			
+            \tikzset{vertex/.style = {shape=circle, draw, minimum size=1.5em}}
+			\tikzset{edge/.style = {- = latex'}}
+			\tikzset{arrow/.style = {beamer_arrow, cdc_Blue}}
+%			\tikzset{newRouting/.style = {thick, Red!70!black, dashed, ->,> = latex'}}
+			\tikzset{newRouting/.style = {beamer_arrow, cdc_Green!70!black, dashed}}
+			% vertices
+%			\node[vertex, label={[align=left]below:\scriptsize{}Activity\\[-2mm]\scriptsize{}Center}] (u) at  (0,0)  {\texttt{A}};
+%			\node[vertex, label={[align=left]above:\scriptsize{}Science and\\[-2mm]\scriptsize{}Technology}] (v) at  (0,2)  {\texttt{S}};
+%			\node[vertex, label={[align=left]above:\scriptsize{}Central\\[-2mm]\scriptsize{}Office}] (x) at  (2,1){\texttt{C}};
+%			\node[vertex, label={[align=left]below:\scriptsize{}Library}] (y) at  (4,0)  {\texttt{L}};
+%			\node[vertex, label={[align=left]above:\scriptsize{}Post Office and\\[-2mm]\scriptsize{}Grocery Store}] (d) at  (4,2)  {\texttt{P}};
 
+			\node[vertex, label={[align=left]below:\scriptsize{}}] (u) at  (0,0)  {\texttt{A}};
+			\node[vertex, label={[align=left]above:\scriptsize{}}] (v) at  (0,2)  {\texttt{S}};
+			\node[vertex, label={[align=left]above:\scriptsize{}}] (x) at  (2,1){\texttt{C}};
+			\node[vertex, label={[align=left]below:\scriptsize{}}] (y) at  (4,0)  {\texttt{L}};
+			\node[vertex, label={[align=left]above:\scriptsize{}}] (d) at  (4,2)  {\texttt{P}};
+
+			%edges
+        	\draw[edge] (v) to (u);
+			\draw[edge] (v) to (x);
+			\draw[edge] (u) to (x);
+			\draw[edge, bend right=0] (y) to (d);
+			\draw[edge] (y) to (x);
+			\draw[edge] (d) to (x);
+\end{tikzpicture}
+	\subcaption{The connections of the example.}
+		\label{fig:motivation_topology}
+	\end{subfigure}%
+~
+	\begin{subfigure}[t]{0.49\textwidth}
+		\centering
+\begin{tikzpicture}			
+            \tikzset{vertex/.style = {shape=circle, draw, minimum size=1.5em}}
+			\tikzset{edge/.style = {- = latex'}}
+			\tikzset{arrow/.style = {beamer_arrow, cdc_Blue}}
+%			\tikzset{newRouting/.style = {thick, Red!70!black, dashed, ->,> = latex'}}
+			\tikzset{newRouting/.style = {beamer_arrow, cdc_Green!70!black, dashed}}
+			% vertices
+%			\node[vertex, label={[align=left]below:\scriptsize{}Activity\\[-2mm]\scriptsize{}Center}] (u) at  (0,0)  {\texttt{A}};
+%			\node[vertex, label={[align=left]above:\scriptsize{}Science and\\[-2mm]\scriptsize{}Technology}] (v) at  (0,2)  {\texttt{S}};
+%			\node[vertex, label={[align=left]above:\scriptsize{}Central\\[-2mm]\scriptsize{}Office}] (x) at  (2,1){\texttt{C}};
+%			\node[vertex, label={[align=left]below:\scriptsize{}Library}] (y) at  (4,0)  {\texttt{L}};
+%			\node[vertex, label={[align=left]above:\scriptsize{}Post Office and\\[-2mm]\scriptsize{}Grocery Store}] (d) at  (4,2)  {\texttt{P}};
+	
+			\node[vertex, label={[align=left]below:\scriptsize{}}] (u) at  (0,0)  {\texttt{A}};
+			\node[vertex, label={[align=left]above:\scriptsize{}}] (v) at  (0,2)  {\texttt{S}};
+			\node[vertex, label={[align=left]above:\scriptsize{}}] (x) at  (2,1){\texttt{C}};
+			\node[vertex, label={[align=left]below:\scriptsize{}}] (y) at  (4,0)  {\texttt{L}};
+			\node[vertex, label={[align=left]above:\scriptsize{}}] (d) at  (4,2)  {\texttt{P}};
+
+
+
+		
+            % Routing 
+      	\draw[arrow,->] (v) to (u);
+		\draw[arrow,->] (u) to (x);
+			\draw[arrow,->] (y) to (x);
+		\draw[arrow,->] (x) to (d);
+%            % Update
+%        \only<4-5> {			\draw[newRouting] (v) to (x);}
+%        \only<4> {			\draw[newRouting, bend right=20] (u) to (x);}
+%        \only<4-8> {			\draw[newRouting] (y) to (d);}
+%        \only<4-6,8-9> {			\draw[newRouting] (x.-55) to (y.180); }
+%            % final
+%%       \only<5->{			\draw[arrow, Red!70!black] (u) to (x);}
+%%       \only<6->{        	\draw[arrow, Red!70!black] (v) to (x);}
+%%       \only<7>{			\draw[arrow, Red!70!black] (x.-55) to (y.180);}
+%%        \only<9-> {			\draw[arrow, Red!70!black] (y) to (d);}
+%%        \only<10-> {			\draw[arrow, Red!70!black] (x) to (y);}
+%       \only<5->{			\draw[arrow, cdc_Green!70!black] (u) to (x);}
+%       \only<6->{        	\draw[arrow, cdc_Green!70!black] (v) to (x);}
+%       \only<7>{			\draw[arrow, cdc_Green!70!black] (x.-55) to (y.180);}
+%        \only<9-> {			\draw[arrow, cdc_Green!70!black] (y) to (d);}
+%        \only<10-> {			\draw[arrow, cdc_Green!70!black] (x) to (y);}
+%			% error
+			
+%		\only<7> { \node (error) at ($(x)!0.5!(y)$) {\Red\scalebox{2}{\LARGE \lightning}};}
+\end{tikzpicture}
+	\subcaption{The forwardings of the example.}
+		\label{fig:initConf}
+	\end{subfigure}%
+	\caption{Example network topology and initial configuration of a software defined network. The corresponding input file
+is given in Listing~\ref{lst:topology}.
+%	\vspace{-0.25cm}
+	}
+	\label{fig:topology}
+\end{figure}
+The following grammar defines the input format.
+%\vspace{-0.mm}
 \begin{lstlisting}[captionpos=b, caption=Grammar of the topology and the initial configuration of SDNs., label = lst:grammar,language=ebnf]
 ts			= name  description?  genOptions?  switches  cons
 			  ingress  egress  forwarding EOF
@@ -602,12 +723,15 @@ ID			= ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
 
 STR			= '"' ~('"' | '\n' | '\r' | '\t')*  '"'
 STR_MULTI	= '"' ~('"' | '\t' )*  '"'
-
 COMMENT		= ('//' ~('\n'|'\r')* | '/*' (. )*? '*/')
 WS		    = ( ' ' | '\n' | '\r' | '\t')
 \end{lstlisting}
+%\vspace{-2.5mm}
 Furthermore, \tool{} provides a parser for the concurrent overlapping updates.
-For an examples please see the updates in the example calls of Listing~\ref{lst:sdnEx}.
+%As an example of an concurrent update of the topology and initial configuration of Fig.~\ref{fig:topology}
+%\texttt{upd(S.fwd(C)) || (upd(L.fwd(P)) >> upd(C.fwd(L)))}
+%For more examples please see the updates in the example calls of Listing~\ref{lst:sdnEx}.
+For examples please see the updates in the example calls of Listing~\ref{lst:sdnEx}.
 \begin{lstlisting}[captionpos=b, caption=Grammar of the concurrent overlapping updates of SDNs., label = lst:grammar,language=ebnf]
 result     	= update EOF
 update      = swUpdate | seqUpdate | parUpdate
@@ -632,6 +756,7 @@ WS			= ( ' ' | '\n' | '\r' | '\t')
 \subsection{LTL and Flow-LTL}
 \tool{} also provides a parser for the temporal logics LTL and Flow-LTL. 
 For examples please see the example calls of \tool{} of Listing~\ref{lst:pnLTLEx} and Listing~\ref{lst:pnwtFlow-LTLEx}.
+The syntax is given by the following grammar.
 \begin{lstlisting}[captionpos=b, caption=Grammar of the temporal logics Flow-LTL, label = lst:grammar,language=ebnf]
 flowLTL 		= runFormula EOF
 
