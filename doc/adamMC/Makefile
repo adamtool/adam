@@ -1,4 +1,4 @@
-NAME = adamMC
+NAME = adamMC_doc
 TEX_FILE = $(NAME).tex
 PARAM = $(TEX_FILE)
 OPTIONS = -synctex=1
