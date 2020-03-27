@@ -1,0 +1,79 @@
+\newcommand{\adamMC}{\texttt{AdamMC}}
+\newcommand{\tool}{\adamMC}
+
+\usepackage{xcolor}
+\definecolor{darkred}{rgb}{0.601,0.001,0.001} %% dunkles Rot
+\definecolor{cdc_Blue}{rgb}{0.0,0.355,0.652} %% Heading Blue (Oldenburg CD Ultramarine)
+\definecolor{cdc_BlueM}{rgb}{0.25,0.473,0.722} %% Heading Blue Medium (Oldenburg CD Ultramarine 60%)
+\definecolor{cdc_Green}{rgb}{0.390,0.695,0.285} %% Heading Green (Oldenburg CD Chartreuse)
+\definecolor{Red}{rgb}{.7,0,0}
+\newcommand{\Red}{\color{Red}}
+
+%Umgebung für Code-Fragmente
+\usepackage{listings} \lstset{	
+	morecomment=[s][\color{darkred}]{"}{"},
+	escapeinside={\%*}{*)},
+	commentstyle=\color{cdc_Green},
+	keywordstyle=\color{blue},
+	frame=single,
+	%backgroundcolor=\color{lstColor},
+%	breaklines=true,
+	tabsize=4,
+basicstyle=\scriptsize
+%  showstringspaces=true,
+%  xleftmargin=13pt,
+%  xrightmargin = 5pt
+}
+
+
+\lstdefinelanguage{apt-format}
+{
+	morekeywords=[1]{.name, .type, .description, .transitions, .places, .flows, .initial_marking, .final_markings,
+			.states, .labels, .arcs},
+	alsoletter={.},
+	keywordstyle=[1]\color{cdc_BlueM},
+	morecomment=[s][\color{darkred}]{"}{"},
+	morecomment=[s][\color{cdc_Green}]{/*}{*/},
+	morecomment=[l][\color{cdc_Green}]{//},
+	escapeinside={\%*}{*)},
+	frame=single,
+	%backgroundcolor=\color{lstColor},
+	breaklines=true,
+	xleftmargin=5pt,
+	xrightmargin = 5pt,
+	numbers=none,
+}
+
+\lstdefinelanguage{sdn-format}
+{
+	morekeywords=[1]{.name, .type, .description, .switches, .connections, .ingress, .egress, .forwarding},
+	alsoletter={.},
+	keywordstyle=[1]\color{cdc_BlueM},
+	morecomment=[s][\color{darkred}]{"}{"},
+	morecomment=[s][\color{cdc_Green}]{/*}{*/},
+	morecomment=[l][\color{cdc_Green}]{//},
+	escapeinside={\%*}{*)},
+	frame=single,
+	%backgroundcolor=\color{lstColor},
+	breaklines=true,
+	xleftmargin=5pt,
+	xrightmargin = 5pt,
+	numbers=none,
+}
+
+\lstdefinelanguage{ebnf}
+{
+	morecomment=[s][\color{darkred}]{'}{'},
+	escapeinside={\%*}{*)},
+	morekeywords=[1]{EOF},
+	keywordstyle=[1]\color{cdc_BlueM},
+%	morecomment=[s][\color{cdc_Green}]{(*}{*)},
+%	morecomment=[s][\color{cdc_BlueM}]{?}{?},
+	frame=single,
+	%backgroundcolor=\color{lstColor},
+	breaklines=true,
+	xleftmargin=5pt,
+	xrightmargin = 5pt,
+	showspaces=false,
+	numbers=none  
+}

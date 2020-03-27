@@ -1,0 +1,19 @@
+usage: sh adam.sh sdn2pdf [-d] -i <file> [-l <file>] [-o <file>] [-optCon]
+       [-psst] [-u <cup>] [-v]
+Converts a Software Defined Networks topology (with an concurrent update)
+to a Petri net with transits and saves this to a pdf file by using
+Graphviz (dot has to be executable).
+ -d,--debug                  Get some debug infos.
+ -i,--input <file>           The path to the input file.
+ -l,--logger <file>          The path to an optional logger file. If it's
+                             not set, the information will be send to the
+                             terminal.
+ -o,--output <file>          The path to the output folder. If it's not
+                             given the path from the input file is used.
+ -optCon,--opt-connections   If set only the necessary connections of the
+                             topology are added. This means only those
+                             used in the initial configuration and those
+                             of the update.
+ -psst,--silent              Makes the tool voiceless.
+ -u,--update <cup>           A concurrent update.
+ -v,--verbose                Makes the tool chatty.

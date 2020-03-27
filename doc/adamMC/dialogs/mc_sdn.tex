@@ -1,0 +1,89 @@
+usage: sh adam.sh mc_sdn [-app <arg>] -c <property> | -f <LTL | Flow-LTL
+       formula> [-circ] [-cr_abc] [-cr_com <arg>] [-cr_sys <arg>] [-d]
+       [-enc <arg>]  -i <file> [-l <file>] [-max <arg>] [-noF] [-o <file>]
+       [-p <abcParameters>] [-pre <process>] [-psst] [-st <arg>] [-stats]
+       [-t] -u <update> [-v] [-veri <verifier>]
+Modelchecking Software Defined Networks with concurrent updates.
+ -app,--approach <arg>                   Chosing the sequential or
+                                         parallel approach (with or
+                                         without inhibitor arcs). Possible
+                                         values: seq | seqIn | par |
+                                         parIn. Standard: parIn.
+ -c,--check <property>                   The standard property to check.
+                                         Possible values: connectivity |
+                                         loopFreedom | weakLoopFreedom |
+                                         dropFreedom | packetCoherence
+ -circ,--circuit                         Saves the created circuit of the
+                                         net as PDF. Attention: this could
+                                         be really huge and dot could need
+                                         lots of time!
+ -cr_abc,--red_abc                       Uses abc dfraig to reduce the
+                                         circuit.
+ -cr_com,--red_gates_com <arg>           Reduces the number of gates of
+                                         the whole cirucit. That means it
+                                         reduces the output of McHyper.
+                                         Possible values: RX-G | RX-G-S |
+                                         DS-G | DS-G-S | DS-G-S-EXTRA |
+                                         NONE. Standard: NONE.
+ -cr_sys,--red_gates_sys <arg>           Reduces the number of gates of
+                                         the system's circuit. Possible
+                                         values: G | G-EQCOM | G-I |
+                                         G-I-EQCOM | G-I-EXTRA |
+                                         G-I-EXTRA-EQCOM | NONE. Standard:
+                                         NONE.
+ -d,--debug                              Get some debug infos.
+ -enc,--encoding <arg>                   Encoding of the transitions in
+                                         the circuit. Possible values:
+                                         logEnc | expEnc. Standard:
+                                         logEnc.
+ -f,--formula <LTL | Flow-LTL formula>   The formula, either Flow-LTL or
+                                         LTL, which should be checked.
+ -i,--input <file>                       The path to the input topology
+                                         file.
+ -l,--logger <file>                      The path to an optional logger
+                                         file. If it's not set, the
+                                         information will be send to the
+                                         terminal.
+ -max,--maximality <arg>                 States which kind of maximality
+                                         should be used. Possible values:
+                                         IntC (interleaving calculated
+                                         within the circuit)  | IntF
+                                         (interleaving added to the
+                                         formula)  | ConF (concurrent
+                                         added to the formula)  | NONE.
+                                         Standard: IntC.
+ -noF,--noFile                           Does not write the formula to a
+                                         file for giving it to MCHyper.
+                                         This causes problems for huge
+                                         formulas.
+ -o,--output <file>                      The path to the output folder. If
+                                         it's not given the path from the
+                                         input file is used.
+ -p,--abcParameters <abcParameters>      Parameters for the verifier /
+                                         falsifier for abc. Standard: no
+                                         parameters.
+ -pre,--preProc <process>                Allows to excute any pre-process
+                                         of abc before the actual veri- or
+                                         falsifier is started.
+ -psst,--silent                          Makes the tool voiceless.
+ -st,--stuck <arg>                       Different formulas for the
+                                         sequential approach to prevent
+                                         runs from stucking in a subnet.
+                                         Possible values: GFo | GFANDNpi |
+                                         ANDGFNpi | GFoANDNpi. Standard:
+                                         GFANDNpi.
+ -stats,--statistics                     Calculates and prints some
+                                         statistics for the call.
+ -t,--trans                              Saves the transformed net in APT
+                                         format and, in the case that dot
+                                         is executable, as PDF.
+ -u,--update <update>                    The update of the topoloy which
+                                         should be checked.
+ -v,--verbose                            Makes the tool chatty.
+ -veri,--verifier <verifier>             The set of ver- and falsifieres
+                                         which should be executed in
+                                         parallel.Note that even parallel
+                                         execution has some overhead.
+                                         Input format: v_1 | ... | v_n
+                                         with v_i from {IC3, INT, BMC,
+                                         BMC2, BMC3}. Standard: IC3

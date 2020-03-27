@@ -1,0 +1,192 @@
+\def\xdis{15}
+\def\ydis{25}
+\begin{tikzpicture}[node distance=\ydis mm and \xdis mm,>=stealth',bend angle=45, on grid]%
+\tikzset{
+inhibitorArc/.style = {o->},
+flowNew/.style ={flow={orange}{dashdotted}},
+flowKeep/.style ={flow={cdc_Green}{dashed}},
+flowConfA/.style ={flow={cdc_Blue}{}},
+flowConfB/.style ={flow={Red!70!black}{}}
+}
+% topology
+\node [envplace, tokens=1]	 			                        (c) [label=above:\texttt{C}]                  	   	{};
+\node [envplace, above=of c, tokens=1, xshift=2*\xdis mm]	        (p) [label=right:\texttt{P}]                  	   	{};
+\node [envplace, below=of c, tokens=1, xshift=2*\xdis mm]	        (l) [label=right:\texttt{L}]                  	   	{};
+\node [envplace, above=of c, tokens=1, xshift=-2*\xdis mm]	        (s) [label=above:\texttt{S}]                  	   	{};
+\node [envplace, below=of c, tokens=1, xshift=-2*\xdis mm]	        (a) [label=below:\texttt{A}]                  	   	{};
+\node [transition]                           at ($(c)!.5!(p)$)	(fwd1) [label={[label distance=-1.5mm]above left:\(\mathit{}\)}]	{};
+\node [transition, xshift=1/4*\xdis mm, yshift=1/4*\ydis mm]   at ($(c)!.5!(l)$)	(fwd2a) [label={[label distance=-1.5mm]above left:\(\mathit{}\)}]	{};
+\node [transition, xshift=-1/4*\xdis mm, yshift=-1/4*\ydis mm] at ($(c)!.5!(l)$)	(fwd2b) [label={[label distance=-1.5mm]above left:\(\mathit{}\)}]	{};
+\node [transition]                           at ($(c)!.5!(s)$)	(fwd3) [label={[label distance=-1.5mm]above left:\(\mathit{}\)}]	{};
+\node [transition]                           at ($(c)!.5!(a)$)	(fwd4) [label={[label distance=-1.5mm]above left:\(\mathit{}\)}]	{};
+\node [transition, below=of s]	                               (fwd5) [label={[label distance=-1.5mm]above left:\(\mathit{}\)}]                  	   	{};
+\node [transition, below=of p]	                               (fwd6) [label={[label distance=-1.5mm]above left:\(\mathit{}\)}]                  	   	{};
+\node [transition, left=of s]	                               (ingr) [label={[label distance=-1.5mm]below:\(\mathit{ingr}\)}]                  	   	{};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NETWORK
+\path[control] 
+		(c) edge[<->]coordinate[pos=0](c_fwd1_S)coordinate[pos=1](c_fwd1_E) (fwd1)
+		    edge[<->]coordinate[pos=0](c_fwd2a_S)coordinate[pos=1](c_fwd2a_E) (fwd2a)
+		    edge[<->]coordinate[pos=0](c_fwd2b_S)coordinate[pos=1](c_fwd2b_E) (fwd2b)
+		    edge[<->]coordinate[pos=0](c_fwd3_S)coordinate[pos=1](c_fwd3_E) (fwd3)
+		    edge[<->]coordinate[pos=0](c_fwd4_S)coordinate[pos=1](c_fwd4_E) (fwd4)
+        (p) edge[<->]coordinate[pos=0](p_fwd1_S)coordinate[pos=1](p_fwd1_E) (fwd1)
+            edge[<->] (fwd6)
+        (l) edge[<->]coordinate[pos=0](l_fwd2a_S)coordinate[pos=1](l_fwd2a_E) (fwd2a)
+            edge[<->]coordinate[pos=0](l_fwd2b_S)coordinate[pos=1](l_fwd2b_E) (fwd2b)
+            edge[<->] (fwd6)
+        (s) edge[<->]coordinate[pos=0](s_fwd3_S)coordinate[pos=1](s_fwd3_E) (fwd3)
+            edge[<->] (fwd5)
+            edge[<->] (ingr)        
+        (a) edge[<->]coordinate[pos=0](a_fwd4_S)coordinate[pos=1](a_fwd4_E) (fwd4)
+            edge[<->] (fwd5)
+;
+
+\path[flowNew] 
+		([yshift=2mm]ingr.east) edge ([yshift=2mm]s.west)
+;
+
+\path[flowKeep]
+		([yshift=-2mm]ingr.east) edge[<->] ([yshift=-2mm]s.west)
+
+		([xshift=2mm]fwd5.south) edge[<->] ([xshift=2mm]a.north)
+
+		($(c_fwd4_E)!5 pt!90:(c_fwd4_S)$) edge[<->] ($(c_fwd4_S)!5 pt!-90:(c_fwd4_E)$)
+
+		($(p_fwd1_E)!5 pt!90:(p_fwd1_S)$) edge[<->] ($(p_fwd1_S)!5 pt!-90:(p_fwd1_E)$)
+
+		($(c_fwd2a_E)!5 pt!90:(c_fwd2a_S)$) edge[<->] ($(c_fwd2a_S)!5 pt!-90:(c_fwd2a_E)$)
+
+        % configure B
+		($(c_fwd3_E)!5 pt!-90:(c_fwd3_S)$) edge[<->] ($(c_fwd3_S)!5 pt!90:(c_fwd3_E)$)
+
+		($(l_fwd2b_E)!5 pt!90:(l_fwd2b_S)$) edge[<->] ($(l_fwd2b_S)!5 pt!-90:(l_fwd2b_E)$)
+
+		([xshift=-2mm]fwd6.north) edge[<->] ([xshift=-2mm]p.south)
+;
+
+\path[flowConfA]
+		([xshift=-2mm]s.south) edge ([xshift=-2mm]fwd5.north)
+		([xshift=-2mm]fwd5.south) edge ([xshift=-2mm]a.north)
+
+		($(a_fwd4_S)!5 pt!-90:(a_fwd4_E)$) edge ($(a_fwd4_E)!5 pt!90:(a_fwd4_S)$)
+		($(c_fwd4_E)!5 pt!-90:(c_fwd4_S)$) edge ($(c_fwd4_S)!5 pt!90:(c_fwd4_E)$)
+
+		($(c_fwd1_S)!5 pt!-90:(c_fwd1_E)$) edge ($(c_fwd1_E)!5 pt!90:(c_fwd1_S)$)
+		($(p_fwd1_E)!5 pt!-90:(p_fwd1_S)$) edge ($(p_fwd1_S)!5 pt!90:(p_fwd1_E)$)
+
+		($(l_fwd2a_S)!5 pt!-90:(l_fwd2a_E)$) edge ($(l_fwd2a_E)!5 pt!90:(l_fwd2a_S)$)
+		($(c_fwd2a_E)!5 pt!-90:(c_fwd2a_S)$) edge ($(c_fwd2a_S)!5 pt!90:(c_fwd2a_E)$)
+;
+
+\path[flowConfB]
+		($(s_fwd3_S)!5 pt!90:(s_fwd3_E)$) edge ($(s_fwd3_E)!5 pt!-90:(s_fwd3_S)$)
+		($(c_fwd3_E)!5 pt!90:(c_fwd3_S)$) edge ($(c_fwd3_S)!5 pt!-90:(c_fwd3_E)$)
+
+		($(c_fwd2b_S)!5 pt!-90:(c_fwd2b_E)$) edge ($(c_fwd2b_E)!5 pt!90:(c_fwd2b_S)$)
+		($(l_fwd2b_E)!5 pt!-90:(l_fwd2b_S)$) edge ($(l_fwd2b_S)!5 pt!90:(l_fwd2b_E)$)
+
+		([xshift=2mm]l.north) edge ([xshift=2mm]fwd6.south)
+		([xshift=2mm]fwd6.north) edge ([xshift=2mm]p.south)
+;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% UPDATE
+\node [envplace, tokens=1, left=of fwd5, xshift=1/4*\xdis mm]	                        (actSA) [label=above:]                  	   	{};
+\node [envplace, tokens=1, below=of fwd4, yshift=1/2*\ydis mm]	                        (actAC) [label=above:]                  	   	{};
+\node [envplace, tokens=1, above=of fwd2a, yshift=-0.56*\ydis mm]	                    (actLC) [label=above:]                  	   	{};
+\node [envplace, tokens=1, above=of fwd1, yshift=-1/8*\ydis mm]	                        (actCP) [label=above:]                  	   	{};
+
+\node [envplace, above=of fwd3, yshift=-1/8*\ydis mm]	                                (actSC) [label=above:]                  	   	{};
+\node [envplace, below=of fwd2b, yshift=1/4*\ydis mm]	                                (actCL) [label=above:]                  	   	{};
+\node [envplace, right=of fwd6, xshift=-1/4*\xdis mm]	                                (actLP) [label=above:]                  	   	{};
+
+\path[control] 
+		(actSA) edge[<->] (fwd5)
+		(actAC) edge[<->] (fwd4)
+		(actLC) edge[<->] (fwd2a)
+		(actCP) edge[<->] (fwd1)
+
+		(actSC) edge[<->] (fwd3)
+		(actCL) edge[<->] (fwd2b)
+		(actLP) edge[<->] (fwd6)
+;
+
+\node [transition, below=of c, yshift=-\ydis mm]	                    (parUp) [label={[label distance=-1.5mm]above:\(\mathit{par. up}\)}]             	   	{};
+\node [envplace, tokens=1, below=of parUp, yshift=0.6*\ydis mm]	            (start) [label=above:]                  	   	{};
+\node [envplace, left=of parUp, xshift=-3*\xdis mm]	                        (up1) [label=above:]                  	   	{};
+\node [transition]	                     at (actSC-| up1)                   (par) [label={[label distance=-1.5mm]above:}]             	   	{};
+\node [envplace, left=of par]                                         (finPar) [label=above:]                  	   	{};
+
+\node [envplace, right=of parUp, xshift=3*\xdis mm]	                        (up2) [label=above:]                  	   	{};
+\node [transition]	                     at (actCL-| up2)                   (seqA) [label={[label distance=-1.5mm]above:}]             	   	{};
+\node [envplace]	                     at (actLP-| seqA)                 (up2a) [label=above:]                  	   	{};
+\node [transition]	                     at (actCP-| seqA)               (seqB) [label={[label distance=-1.5mm]above:}]             	   	{};
+\node [envplace, right=of seqB]                                         (finSeq) [label=above:]                  	   	{};
+
+\path[control] 
+		(start) edge (parUp)
+		(parUp) edge (up1)
+		        edge (up2)
+
+        (up1) edge (par)
+        (actSA) edge (par)
+        (par) edge (actSC)
+              edge (finPar)
+
+		(up2) edge (seqA)
+		(seqA) edge (up2a)
+		       edge (actCL)
+        (actLC) edge[bend right=10] (seqA)
+		(seqB) edge (finSeq)
+		       edge (actLP)
+        (actCP) edge (seqB)
+        (up2a) edge (seqB)
+
+        
+        
+;
+
+%
+%%% LAYERS
+%\begin{pgfonlayer}{background}
+%\draw [-, rectangle,rounded corners,gray,fill=gray!15,pattern=north east lines,opacity=0.4,pattern color=gray]
+% 	([xshift=-2mm,yshift=-4mm]bO.south west) --
+%	([xshift=8mm,yshift=-4mm]bO.south east) --
+%	([xshift=-69.8mm,yshift=4mm]inittfl.north west) --
+%	([xshift=-85mm,yshift=4mm]inittfl.north west) --
+%	cycle;
+%\draw [-, rectangle,rounded corners,gray,fill=gray!15,pattern=north west lines,opacity=0.4,pattern color=gray]
+% 	([xshift=-10.5mm,yshift=-4mm]b.south west) --
+%	([xshift=15mm,yshift=-4mm]sb1.south east) --
+%	([xshift=20.6mm,yshift=4mm]inittfl1.north west) --
+%	([xshift=-58.6mm,yshift=4mm]inittfl.north west) --
+%	cycle;
+
+%\draw [-, rectangle,rounded corners,orange,fill=orange!15]
+%% 	([xshift=-6mm,yshift=-2mm]b.south west) --
+% 	([xshift=-2.5mm,yshift=-2mm]b.south west) --
+%	([xshift=15mm,yshift=-2mm]b.south east) --
+%	([xshift=-27.6mm,yshift=2mm]inittfl.north west) --
+%%	([xshift=-56.6mm,yshift=2mm]inittfl.north west) --
+%	([xshift=-50.6mm,yshift=2mm]inittfl.north west) --
+%	cycle;
+
+%\draw [-, rectangle,rounded corners,DarkBlue,fill=cdc_BlueL!15]
+% 	([xshift=-24.5mm,yshift=-2mm]sb.south west) --
+%	([xshift=26.5mm,yshift=-2mm]sb.south east) --
+%	([xshift=32mm,yshift=2mm]inittfl.north west) --
+%	([xshift=-24.5mm,yshift=2mm]inittfl.north west) --
+%	cycle;
+%\draw [-, rectangle,rounded corners,ganttGreen,fill=cdc_GreenL!15]
+% 	([xshift=-24.5mm,yshift=-2mm]sb1.south west) --
+%	([xshift=13mm,yshift=-2mm]sb1.south east) --
+%	([xshift=18.6mm,yshift=2mm]inittfl1.north west) --
+%	([xshift=-24.5mm,yshift=2mm]inittfl1.north west) --
+%	cycle;
+%%\draw [-, rectangle,rounded corners,DarkBlue,fill=cdcBlueL!15] ([xshift=-2mm,yshift=18mm]ea.north west) -- ([xshift=2mm,yshift=18mm]eb.north east) -- ([xshift=2mm,yshift=-5mm]eb.south east) -- ([xshift=-2mm,yshift=-5mm]ea.south west) -- cycle;
+%%\draw [-, rectangle,rounded corners,DarkRed,fill=DarkRed!15, fill opacity=0.95] ([xshift=-2mm,yshift=-3mm]ab.south west) -- ([xshift=-2mm,yshift=35mm]ab.south west) -- ([xshift=2mm,yshift=35mm]ba.south east) -- ([xshift=2mm,yshift=-3mm]ba.south east) -- cycle;
+%%\draw [-, rectangle,rounded corners,ganttGreen,fill=cdcGreenL!15, fill opacity=0.45] ([xshift=-5mm,yshift=-10mm]t3.south west) -- ([xshift=-5mm,yshift=10mm]t3.north west) -- ([xshift=5mm,yshift=10mm]t3b.north east) -- ([xshift=5mm,yshift=-10mm]t3b.south east) -- cycle;
+%\end{pgfonlayer}
+\end{tikzpicture}
+%\end{subfigure}

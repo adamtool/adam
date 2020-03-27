@@ -1,0 +1,254 @@
+This document describes the file format of \tool{}, a tool for the automatic synthesis of distributed systems with multiple concurrent processes. For further information about the tool feel free to visit \url{http://www.uni-oldenburg.de/csd/adam}.
+
+\tool{} uses the data structure for Petri nets and the parser provided by APT\footnote{\url{https://github.com/CvO-Theory/apt}}. Therefore, we rehash some information about the grammar of the parser and the special case how to define Petri games in the APT file format.
+
+In general a file in the APT file format is structured in sections labeled with \textit{.section} with its content added below or directly behind this keyword. For the usability of writing the document, whitespaces are ignored.
+
+The name of the file or Petri game is given by 
+
+\begin{lstlisting}[language=apt-format]
+.name "name"
+\end{lstlisting}
+
+Every character is allowed to be used within the string, apart from the doubled quotation marks, line breaks and tabulators.
+
+Since the file format itself is more general and also used for transition systems in other contexts, we have to specify the type of the graph. This is done by
+
+\begin{lstlisting}[language=apt-format]
+.type LPN
+\end{lstlisting}
+
+Optionally we can add a description to the given net with
+
+\begin{lstlisting}[language=apt-format]
+.description "Some describing text of the Petri game"
+\end{lstlisting}
+
+This string is the only one which -- different to the string mentioned above -- can additionally use line breaks for defining longer descriptions.
+
+The places are given by
+
+\begin{lstlisting}[language=apt-format]
+.places
+env1[env="true"]
+bad0[token=2, bad="true"]
+bad1[token=3, bad="true"]
+...
+env0[env="true"]
+\end{lstlisting}
+
+For typing a place as an environment place annotate him with [\texttt{env="true"}], all other places are typed as belonging to the system players. Do the same for bad places with [\texttt{bad="true"}].
+
+The places of the Petri game aren't just divided into environment and system places, but
+also into groups of places stating these are the places a given token can lie on. Thus, 
+you can annotate the places with the [\texttt{token=\textless{}number\textgreater}] key-value pair, where \textless{}number\textgreater is the number of the group this place belongs to. You only have to annotate the system 
+places. Environment places are automatically marked as group 0. Thus, the numbers
+annotated must start from 1 and it is not allowed to omit some natural number between 1
+and the maximum number annotated. Be aware that the partition has to be disjunct in the 
+sense that no two places in one group can be marked at the same time. \tool{} has a feature 
+to support you by annotating the places or even completely annotate the places on its own.
+To use this, just don't annotate any places with [\texttt{token=\textless{}number\textgreater{}}] and use, for example, 
+the \emph{win\_strat} module. If \tool{} can annotate the places on its own, you can read the
+annotation by the colouring of the places in the resulting pdf file of the Petri game.
+Otherwise, \tool{} prints some invariants which should support you by following the token 
+through the net.
+
+The identifiers of the places (like \texttt{env1}, \texttt{bad0}, etc.) are allowed to be integers or strings beginning with a letter and containing only characters (a-z, A-Z) and integers. Different to the grammar described in Listing~\ref{lst:grammar}, there are no underscores valid within the identifier of the places for Petri games. This would cause some trouble while calculating the strategy for the Petri game.
+
+For defining the transitions of the Petri game the same rules for the identifiers, apart from the underscores, are implemented. That is, additionally the identifiers can start with an underscore and can contain some within.
+
+\begin{lstlisting}[language=apt-format]
+.transitions
+t1
+t2
+...
+\end{lstlisting}
+
+To define the connection between places and transitions the section \textit{.flows} is used. This is done by listing the pre- and postsets of every transition separately.
+
+\begin{lstlisting}[language=apt-format]
+.flows
+t1: {s1} -> {s1}
+\end{lstlisting}
+
+Thus, here the place \texttt{s1} has a self loop with transition \texttt{t1}. The preset is intuitively defined in front of the arrow and the postset behind.
+
+At the moment the Petri games in \tool{} are restricted to safe Petri nets. Thus, there is no need for multi-weight edges. But since this restriction should not last for ever, we are already describing the not $1$-bound case here. 
+
+Multi-weight edges are defined by a multiplier given by a natural number stating how many tokens should be used or transmitted respectively.
+
+\begin{lstlisting}[language=apt-format]
+.flows
+t1: {} -> {s2, 2*s1, s2, 0*s3, 3*s2} 
+\end{lstlisting}
+
+The edge weight $1$ need not to be given as a multiplier additionally. The multiplier $0$ -- an edge with weight zero -- is the same as not listing the place at all. The empty pre- or postset can be defined by an empty set $\{\}$. Furthermore, the place \texttt{s2} is listed three times in the postset of \texttt{t1}. Twice with the invisible multiplier $1$ and once with the multiplier $3$. This yields in an edge with weight $5$ in the resulting Petri net. Remark that the multiplier is not commutative, since the identifiers of the places can also -- as mentioned above -- be only integers and thus the semantics would not be unique any more.  
+
+The initial marking of the Petri net is given analogously to the pre- and postsets as multisets with multipliers:
+
+\begin{lstlisting}[language=apt-format]
+.initial_marking {2*s1, s2}
+\end{lstlisting}
+
+Thus, initially there are two token on place \texttt{s1} and one on \texttt{s2}. Is this section omitted, the resulting Petri net won't have any token.
+
+The last property is the ability to add comments at any place in the file. Therefore we use the comments notations of languages like C. Thus, a comment influencing the whole line is initialized by \textit{//}. A whole area of a comment can be framed by \textit{/* */}, which is also possible to contain multiple lines.
+
+\begin{lstlisting}[language=apt-format]
+// comment
+.flows
+t1: {} -> {2*s1,/*s2,*/ 3*s3}
+\end{lstlisting}
+
+All in all, a complete example of a Petri game defined in the APT format can look like:
+
+%All in all, a complete example of a Petri game visualized in Figure~\ref{img_df_pn} is given in the APT format in Listing~\ref{lst_df_pn}.
+
+\begin{lstlisting}[literate=, captionpos=b, caption=Example of a Petri game, label = lst_df_pn,language=apt-format]
+// The environment decides between A or B, and the system players should imitate this by choosing A' or B'. http://www.react.uni-saarland.de/publications/FO14.pdf
+.name "SameDecision"
+.type LPN
+.description "Testing the same decision."
+
+.places
+Env[env="true"]
+A[env="true"]
+B[env="true"]
+Sys[token=1]
+A_[token=1]
+B_[token=1]
+EA[env="true"]
+EB[env="true"]
+qbad[token=1, bad="true"]
+
+.transitions
+t1 t2
+test1 test2
+t1_ t2_
+tbad1 tbad2 tbad3 tbad4
+
+.flows
+t1: {Env} -> {A}
+t2: {Env} -> {B}
+test1: {A,Sys} -> {Sys,EA}
+test2: {B,Sys} -> {Sys,EB}
+t1_: {Sys} -> {A_}
+t2_: {Sys} -> {B_}
+// bad states
+tbad1: {A_,EB} -> {EB,qbad}
+tbad2: {B_,EA} -> {EA,qbad}
+tbad3: {A_,B} -> {B,qbad}
+tbad4: {B_,A} -> {A,qbad}
+
+.initial_marking {Env,Sys}
+\end{lstlisting}
+
+%\begin{minipage}{\textwidth}
+%\centering
+%\begin{tikzpicture}[node distance=2cm,>=stealth',bend angle=45,auto]
+%	\node [envplace,tokens=1] (env)  [label=above:$\text{Env}$]                                  {};
+%	\node [sysplace] (sys) [below of=env,label=above:$\text{Sys}$]                     {};
+%	\node[token] at (sys) {};
+%	\node [transition] (test1)  [left of=sys,label=above:$\text{test}_1$] {};
+%	\node [transition] (test2)  [right of=sys,label=above:$\text{test}_2$] {};
+%	\node [envplace] (a)  [left of=test1,label=left:$A$]                                  {};
+%	\node [envplace] (b)  [right of=test2,label=right:$B$]                                  {};
+%	\node [transition] (t1)  [above of=a,label=above:$t_1$] {};
+%	\node [transition] (t2)  [above of=b,label=above:$t_2$] {};
+%	\node [transition] (t1_)  [below of=test1,label=left:$t_1'$,xshift=1cm] {};
+%	\node [transition] (t2_)  [below of=test2,label=right:$t_2'$,xshift=-1cm] {};
+%	\node [sysplace] (a_) [below of=t1_,label=left:$A'$]                     {};
+%	\node [sysplace] (b_) [below of=t2_,label=right:$B'$]                     {};
+%	\node [envplace] (ea)  [below of=a,label=left:$EA$]                                  {};
+%	\node [envplace] (eb)  [below of=b,label=right:$EB$]                                  {};
+%	\node [transition] (tb)  [below of=ea,label=left:$t_{B\bot}$] {};
+%	\node [transition] (ta)  [below of=eb,label=right:$t_{A\bot}$] {};
+%	\node [sysplace,accepting] (bot) [below of=a_,right of=a_,label=below:$\bot$,xshift=-1cm]                     {};
+
+%	\path[->] 	(t1)  		edge [pre]                            (env)
+%					edge [post]                            (a)
+%		 	(t2)  		edge [pre]                            (env)
+%					edge [post]                            (b)
+%		 	(test1) 	edge [pre]                            (a)
+%					edge [pre,bend left]                            (sys)
+%					edge [post,bend right]                            (sys)
+%					edge [post]                            (ea)
+%		 	(test2) 	edge [pre]                            (b)
+%					edge [pre,bend right]                            (sys)
+%					edge [post,bend left]                            (sys)
+%					edge [post]                            (eb)
+%		 	(t1_)  		edge [pre]                            (sys)
+%					edge [post]                            (a_)
+%		 	(t2_)  		edge [pre]                            (sys)
+%					edge [post]                            (b_);
+%	\path[->]	(tb) 		edge [pre, bend right]                            (b_)
+%					edge [pre, bend right]                            (ea)
+%					edge [post, bend left]                            (ea)
+%					edge [post,bend right]                            (bot);
+%	\path[->]		 	(ta) 		edge [pre, bend left]                            (a_)
+%					edge [pre, bend right]                            (eb)
+%					edge [post, bend left]                            (eb)
+%					edge [post, bend left]                            (bot);
+%\end{tikzpicture}
+%%\caption{With Listing \ref{lst_df_pn} defined Petri game}
+%\label{img_df_pn}
+%\end{minipage}
+
+%Eine Grammatik wie diese einzelnen Definitionen in dem implementierten Parser umgesetzt werden, befindet sich in Listing \ref{grammatik_petri_netze}.
+%\abs
+%Die einzelnen Sektionen d"urfen in beliebiger Reihenfolge aufgef"uhrt werden, wobei die Abschnitte \textit{.name}, \textit{.initial\_marking} und \textit{.description} null- oder genau einmal auftreten d"urfen und die Abschnitte \textit{.places}, \textit{.transitions} und \textit{.flows} nullmal oder beliebig h"aufig verwandt werden d"urfen. Wenn sie mehrfach auftreten, dann werden alle Werte f"ur die Definition des Netzes verwandt. Die Sektion \textit{.type} muss genau einmal aufgef"uhrt sein.
+
+%\subsubsection{Grammatik f"ur Petri-Netze mit und ohne Beschriftungen}
+%\label{sec_parser_lpn_grammatik}
+%In Listing \ref{grammatik_petri_netze} ist eine Grammatik in EBNF mit dem Startsymbol \texttt{S} angegeben, welche die korrekte Syntax von Petri-Netzen mit und ohne Beschriftungen im APT-Format definiert. Dabei ist zu beachten, dass die Besonderheit des Formates bez"uglich der H"aufigkeit des Auftretens der Sektionen nicht in der Grammatik "ubersichtlich dargestellt werden konnte und auch im implementierten Parser mithilfe von Algorithmen beim Parsevorgang gel"ost ist. Ebenso ist der konkrete Umgang mit den Whitespaces wie auch den Kommentaren in der Grammatik nicht direkt dargestellt; diese werden zwar gelesen, aber f"ur die weitere Verarbeitung verworfen.
+%\abs
+
+%Wichtig ist also zu beachten, dass die Reihenfolgen der einzelnen Sektionen zwar beliebig ist, jedoch k"onnen die Abschnitte f"ur Stellen, Transitionen, Kanten und der Endmarkierung beliebig h"aufig angegeben werden. Die Sektionen f"ur Namen und Beschreibung sind optional, wobei die Definition f"ur den Typ genau einmal auftauchen muss. Die spezielle Sequenz \texttt{EOF} besagt, dass nach den Sektionen die Datei auch zu Ende sein soll. Dies ist f"ur aussagekr"aftigere Fehlermeldungen hilfreich.
+
+The whole grammar which the parser accepts is given by 
+\begin{lstlisting}[captionpos=b, caption=Grammar of the APT format for labelled Petri nets, label = lst:grammar,language=ebnf]
+S               = { name | type | description | places 
+                  | transitions | flows 
+                  | initial_marking | final_markings },
+                  ? EOF ?;
+name            = '.name', STR;
+type            = '.type', ('LPN' | 'PN');
+description     = '.description', (STR | STR_MULTI);
+places          = '.places', place;
+place           =  | idi, [opts], place;
+opts            = '[', option, ']';
+option          = ID, '=', STR, [',', option];
+transitions     = '.transitions', transition;
+transition      =  | idi, [opts], transition;
+flows           = '.flows', flow;
+flow            = | idi, ':', set, '->', set, flow;
+set             = '{', [objs], '}';
+objs            = obj, [',', objs]; 
+obj             = (INT, '*', idi) | idi;
+initial_marking = '.initial_marking', [set];
+final_markings  = '.final_markings', final_marking;
+final_marking   = | set, final_marking;
+idi             = ID | INT;
+INT             = DIGIT, {DIGIT};
+ID              = (CHAR | '_'), {CHAR | DIGIT | '_'};
+DIGIT           = '0' | '1' | '2' | '3' | '4' | '5' 
+                | '6' | '7' | '8' | '9';
+CHAR            = 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+                | 'G' | 'H' | 'I' | 'J' | 'K' | 'L'
+                | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R'
+                | 'S' | 'T' | 'U' | 'V' | 'W' | 'X'
+                | 'Y' | 'Z' |
+                  'a' | 'b' | 'c' | 'd' | 'e' | 'f'
+                | 'g' | 'h' | 'i' | 'j' | 'k' | 'l'
+                | 'm' | 'n' | 'o' | 'p' | 'q' | 'r'
+                | 's' | 't' | 'u' | 'v' | 'w' | 'x'
+                | 'y' | 'z';
+STR             = '"', {ALLCHAR - ('"' | '\n' | '\r' | '\t')}, '"';
+STR_MULTI       = '"', {ALLCHAR - ('"' | '\t')}, '"';
+COMMENT         = '//', {ALLCHAR - ('\n'|'\r')}, ['\r'], '\n';
+	        | '/*', {ALLCHAR} - '*/', '*/';
+WHITESPACE      = ' ' | '\n' | '\r' | '\t';
+ALLCHAR         = ? All possible symbols ?;
+\end{lstlisting}
+%\label{lst:grammar}
+
