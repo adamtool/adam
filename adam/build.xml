@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="adam" default="jar">
+
+	<dirname property="adam.basedir" file="${ant.file.adam}"/>
+
+<!--  %%%%%%%%%%%%%%%%%%%%%%%%%%%%% IMPORTS %%%%%%%%%%%%%%%%%%%%%%%%%%% -->	
+	<property file="${adam.basedir}/build.properties"/>
+	<import file="${mainfolder}/build_macros.xml" optional="false"/>
+	<include file="${mainfolder}/build_targets.xml" as="adam.fu" optional="false" />
+
+<!--  %%%%%%%%%%%%%%%%%%%%%%%%%%%%% PATHs %%%%%%%%%%%%%%%%%%%%%%%%%%% -->	
+
+	<union id="adam.jar.res">    
+<!--			<zipfileset includes="**/*.class" src="${mainfolder}/lib/apt/apt.jar"/>
+			<zipfileset includes="**/*.stg" src="${mainfolder}/lib/apt/apt.jar"/>		-->
+	<!--		<zipfileset includes="**/*.class" src="${mainfolder}/logic/adam_logics.jar"/>
+			<zipfileset includes="**/*.class" src="${mainfolder}/lib/javaBDD/javabdd-1.0b2.jar"/>
+			<zipfileset includes="**/*.class" src="${mainfolder}/symbolicalgorithms/adam_symbolic.jar"/>
+			<zipfileset includes="**/*.class" src="${mainfolder}/lib/commons-cli-1.2/commons-cli-1.2.jar"/>
+			<zipfileset includes="**/*.class" src="${mainfolder}/lib/apt/apt.jar"/>
+			<zipfileset includes="**/*.class" src="${mainfolder}/server/adam_protocol.jar"/>-->
+<!--			<zipfileset includes="**/*.class" src="${subproject.basedir}/../ds/adam_logics.jar"/>-->
+<!--			<zipfileset includes="**/*.stg" src="${subproject.basedir}/../ds/adam_logics.jar"/>-->
+<!--			<zipfileset includes="**/*.class" src="${subproject.basedir}/lib/javaBDD/javabdd-1.0b2.jar"/>-->
+	</union>
+
+	<!--  %%%%%%%%%%%%%%%%%%%%%%%%%%%%% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%% -->	
+	<target name="loadProperties">
+		<property file="${subproject.basedir}/build.properties"/>		
+	</target>
+
+<!--  %%%%%%%%%%%%%%%%%%%%%%%%%%%%% DELEGATES %%%%%%%%%%%%%%%%%%%%%%%%%%% -->	
+	<target name="test" depends="loadProperties" description="Runs all tests">
+		<antcall target="adam.fu.test"/>
+			<!--<ant antfile="${logics.basedir}/build_logics.xml" target="test"></ant>	-->	
+	</target>
+	<target name="test-method" depends="loadProperties" description="Runs the tests of a specific method">
+		<antcall target="adam.fu.test-method"/>
+	</target>
+	<target name="test-class" depends="loadProperties" description="Runs the tests of a specific class">
+		<antcall target="adam.fu.test-class"/>
+	</target>
+	<target name="jar" depends="loadProperties" description="Builds a jar with all its dependencies">
+		<antcall target="adam.fu.jar"/>
+	</target>
+	<target name="jar-standalone" depends="loadProperties" description="Builds a jar with all its dependencies">
+		<antcall target="adam.fu.jar-standalone"/>
+	</target>
+
+	<target name="deploy" depends="clean-all,jar-standalone" description="Builds a jar with all its dependencies">
+		<jar destfile="adam_adam.jar">
+			<zipfileset includes="**/*.class" src="./adam_adam-standalone.jar"/>
+			<zipfileset includes="**/*.stg" src="./adam_adam-standalone.jar"/>
+		<!--	<zipfileset dir="${libfolder}" includes="quabs_mac" fullpath="lib/quabs_mac"/>
+			<zipfileset dir="${libfolder}" includes="quabs_unix" fullpath="lib/quabs_unix"/>-->
+			<manifest>
+				<attribute name="Main-Class" value="uniolunisaar.adam.main.ui.cl.AdamComplete"/>
+			</manifest>
+		</jar>	
+	</target>
+<!--
+Deprecated after splitting up AdamMC and AdamSYNT and moving the protocol for the server in AdamSYNT
+	<target name="deploy_mc" depends="clean-all" description="Builds a jar with all its dependencies for the model checker">
+        <antcall target="jar-standalone">
+            <param name="libFile" value="libsMC.res"/>
+        </antcall>
+		<jar destfile="adam_mc.jar">
+			<zipfileset includes="**/*.class" src="./adam_client.ui-standalone.jar"
+                 excludes="**/synthesis/**,
+                            **/Adam.class, **/AdamComplete.class, **/AdamSynthesizer.class"/>
+			<zipfileset includes="**/*.stg" src="./adam_client.ui-standalone.jar"/>
+			<manifest>
+				<attribute name="Main-Class" value="uniolunisaar.adam.main.ui.cl.AdamMC"/>
+			</manifest>
+		</jar>	
+	</target>
+-->
+
+<!--
+Deprecated after splitting up AdamMC and AdamSYNT and moving the protocol for the server in AdamSYNT
+	<target name="deploy_synth" depends="clean-all" description="Builds a jar with all its dependencies for the synthesizer">
+        <antcall target="jar-standalone">
+            <param name="libFile" value="libsSynth.res"/>
+        </antcall>
+		
+		<jar destfile="adam_synt.jar">
+			<zipfileset includes="**/*.class" src="./adam_client.ui-standalone.jar"
+                  excludes="**/modelchecking/**,
+                            **/Adam.class, **/AdamComplete.class, **/AdamMC.class"/>
+			<zipfileset includes="**/*.stg" src="./adam_client.ui-standalone.jar"/>
+			<manifest>
+				<attribute name="Main-Class" value="uniolunisaar.adam.ui.AdamSynthesizer"/>
+			</manifest>
+		</jar>	
+	</target>
+-->
+	<target name="javadoc" depends="loadProperties" description="Creates the JavaDoc of this package.">
+		<antcall target="adam.fu.javadoc"/>
+	</target>
+	<target name="clean" depends="loadProperties" description="Cleans all temporary files.">
+		<antcall target="adam.fu.clean"/>
+	</target>
+	<target name="clean-all" depends="loadProperties" description="Cleans all temporary files including the reports">
+		<antcall target="adam.fu.clean-all"/>
+	</target>
+</project>
