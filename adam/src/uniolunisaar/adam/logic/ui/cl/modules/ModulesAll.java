@@ -2,6 +2,8 @@ package uniolunisaar.adam.logic.ui.cl.modules;
 
 import uniolunisaar.adam.logic.ui.cl.modules.converter.modelchecking.Pnwt2Dot;
 import uniolunisaar.adam.logic.ui.cl.modules.converter.modelchecking.Pnwt2Pdf;
+import uniolunisaar.adam.logic.ui.cl.modules.converter.petrinet.Pn2Pdf;
+import uniolunisaar.adam.logic.ui.cl.modules.converter.petrinet.Pn2Unfolding;
 import uniolunisaar.adam.logic.ui.cl.modules.synthesis.benchmarks.Benchmark;
 import uniolunisaar.adam.logic.ui.cl.modules.synthesis.benchmarks.BenchmarkSynt2017;
 import uniolunisaar.adam.logic.ui.cl.modules.modelchecking.benchmarks.BenchmarkTacas2018;
@@ -37,6 +39,8 @@ public class ModulesAll extends Modules {
 
     private static final AbstractModule[] modules = {
         // Converter
+        new Pn2Pdf(),
+        new Pn2Unfolding(),
         new Pg2Dot(),
         new Pnwt2Dot(),
         new Pg2Pdf(),
