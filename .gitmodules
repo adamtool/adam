@@ -1,0 +1,36 @@
+[submodule "framework"]
+	path = framework
+	url = git@github.com:adamtool/framework.git
+[submodule "webinterface-backend"]
+	path = webinterface-backend
+	url = git@github.com:adamtool/webinterface-backend.git
+[submodule "adamsynt"]
+	path = adamsynt
+	url = git@github.com:adamtool/adamsynt.git
+[submodule "adammc"]
+	path = adammc
+	url = git@github.com:adamtool/adammc.git
+[submodule "server-command-line"]
+	path = server-command-line
+	url = git@github.com:adamtool/server-command-line.git
+[submodule "server-command-line-protocol"]
+	path = server-command-line-protocol
+	url = git@github.com:adamtool/server-command-line-protocol.git
+[submodule "high-level"]
+	path = high-level
+	url = git@github.com:adamtool/high-level.git
+[submodule "synthesizer"]
+	path = synthesizer
+	url = git@github.com:adamtool/synthesizer.git
+[submodule "ui"]
+	path = ui
+	url = git@github.com:adamtool/ui.git
+[submodule "modelchecker"]
+	path = modelchecker
+	url = git@github.com:adamtool/modelchecker.git
+[submodule "logics"]
+	path = logics
+	url = git@github.com:adamtool/logics.git
+[submodule "libs"]
+	path = libs
+	url = git@github.com:adamtool/libs.git
