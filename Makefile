@@ -1,35 +1,33 @@
 # the build target
-CORE_TARGETS = tools petrinetwithtransits
-MC_TARGETS = logics modelchecker
-SYNT_TARGETS = petrigames
-BOUNDED_TARGETS = bounded
-SYMBOLIC_TARGETS = symbolic
-HL_TARGETS = highlevel
-SYNT_ALL_TARGETS = $(SYNT_TARGETS)  $(BOUNDED_TARGETS)  $(SYMBOLIC_TARGETS) $(HL_TARGETS)
-BACKEND_TARGETS = $(CORE_TARGETS) $(MC_TARGETS) $(SYNT_ALL_TARGETS)
-UI_TARGETS = server adammc adamsynt adam
+FRAMEWORK_TARGETS = tools petrinetwithtransits
+MODELCHECKING_TARGETS = logics mc
+SYNTHESIZER_TARGETS = petrigames symbolic bounded highlevel
+UI_TARGETS = protocol server ui adammc adamsynt adam
 t=jar
 
-# should be executed no matter what
-.PHONY: clean
-.PHONY: clean-all
+# should be executed no matter if a file with the same name exists or not
 .PHONY: tools
 .PHONY: petrinetwithtransits
-.PHONY: petrigames
 .PHONY: logics
+.PHONY: mc
+.PHONY: petrigames
 .PHONY: bounded
 .PHONY: symbolic
 .PHONY: bdd
-.PHONY: core
+.PHONY: mtbdd
+.PHONY: highlevel
+.PHONY: backend
 .PHONY: server
 .PHONY: ui
 .PHONY: adammc
 .PHONY: adamsynt
 .PHONY: adam
-.PHONY: javadoc
+.PHONY: backend_deploy
+.PHONY: mc_deploy_noUI
+.PHONY: synt_deploy_noUI
+.PHONY: bounded_deploy_noUI
+#.PHONY: javadoc
 .PHONY: examples
-.PHONY: test
-.PHONY: highlevel
 
 # functions
 create_bashscript = \#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/Adam$(strip $(1)).jar\" ] ; then\n\techo \"Adam$(strip $(1)).jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/Adam$(strip $(1)).jar\" \"\044@\"
@@ -52,39 +50,42 @@ endef
 all: deploy
 
 tools:
-	ant -buildfile ./tools/build.xml $(t)
+	ant -buildfile ./framework/tools/build.xml $(t)
 
 petrinetwithtransits:
-	ant -buildfile ./petrinetWithTransits/build.xml $(t)
-
-petrigames:
-	ant -buildfile ./petriGames/build.xml $(t)
-
-highlevel:
-	ant -buildfile ./highLevel/build.xml $(t)
+	ant -buildfile ./framework/petrinetWithTransits/build.xml $(t)
 
 logics:
 	ant -buildfile ./logics/build.xml $(t)
 
-modelchecker:
-	ant -buildfile ./modelchecking/build.xml $(t)
+mc:
+	ant -buildfile ./modelchecker/build.xml $(t)
+
+petrigames:
+	ant -buildfile ./synthesizer/petriGames/build.xml $(t)
 
 bounded:
-	ant -buildfile ./boundedalgorithms/build.xml $(t)
+	ant -buildfile ./synthesizer/boundedalgorithms/build.xml $(t)
 
 bdd:
-	ant -buildfile ./symbolicalgorithms/bddapproach/build.xml $(t)
+	ant -buildfile ./synthesizer/symbolicalgorithms/bddapproach/build.xml $(t)
 
 mtbdd:
-	ant -buildfile ./symbolicalgorithms/mtbddapproach/build.xml $(t)
+	ant -buildfile ./synthesizer/symbolicalgorithms/mtbddapproach/build.xml $(t)
 
 symbolic: bdd mtbdd
 
-interface:
-	ant -buildfile ./core/build.xml $(t)
+highlevel:
+	ant -buildfile ./high-level/build.xml $(t)
+
+backend:
+	ant -buildfile ./webinterface-backend/build.xml $(t)
+
+protocol:
+	ant -buildfile ./server-command-line-protocol/build.xml $(t)
 
 server:
-	ant -buildfile ./server/build.xml $(t)
+	ant -buildfile ./server-command-line/build.xml $(t)
 
 ui:
 	ant -buildfile ./ui/build.xml $(t)
@@ -119,87 +120,83 @@ setDeployBounded:
 setStandalone:
 	$(eval t=jar-standalone)
 
-clean: setClean $(BACKEND_TARGETS) $(UI_TARGETS) interface
-	rm -r -f deploy
-	rm -r -f javadoc
-
-clean-all: setCleanAll $(BACKEND_TARGETS) $(UI_TARGETS) interface
-	rm -r -f deploy
-	rm -r -f javadoc
-
 javadoc:
 	ant javadoc
 
-core_deploy: $(BACKEND_TARGETS) setDeploy interface
+backend_deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) setDeploy backend
 	mkdir -p deploy
-	cp ./core/adam_core.jar ./deploy/adam_core.jar
+	cp ./adam_core.jar ./deploy/adam_core.jar
 
-#test:
-#	echo "$(call create_bashscript)" > ./deploy/adam
 
-mc_deploy: $(CORE_TARGETS) $(MC_TARGETS) setDeploy adammc
+mc_deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) ui setDeploy adammc
 	mkdir -p deploy
 	echo "$(call create_bashscript, MC)" > ./deploy/AdamMC
 	chmod +x ./deploy/AdamMC
 	cp ./adammc/adam_mc.jar ./deploy/AdamMC.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
-synt_deploy: $(CORE_TARGETS) $(SYNT_ALL_TARGETS) setDeploy server adamsynt
+synt_deploy: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy server adamsynt
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript, SYNT)" > ./deploy/AdamSYNT
 	chmod +x ./deploy/AdamSYNT
-	cp ./adamsynt/adam_synt.jar ./deploy/AdamSYNT.jar
-	cp ./server/adam_server.jar ./deploy/adam_server.jar
-	cp ./adamsynt/adam_protocol.jar ./deploy/adam_protocol.jar
+	cp ./synthesizer/adamsynt/adam_synt.jar ./deploy/AdamSYNT.jar
+	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
-	cp ./lib/quabs_mac ./deploy/lib/quabs_mac
-	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
-	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
-	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
+	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
+	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
-deploy: $(BACKEND_TARGETS) setDeploy $(UI_TARGETS)
+deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy server adamsynt adammc adam
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript)" > ./deploy/Adam
 #	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
 	chmod +x ./deploy/Adam
 	cp ./adam/adam_adam.jar ./deploy/Adam.jar
-	cp ./server/adam_server.jar ./deploy/adam_server.jar
-	cp ./adamsynt/adam_protocol.jar ./deploy/adam_protocol.jar
+	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
-	cp ./lib/quabs_mac ./deploy/lib/quabs_mac
-	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
-	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
-	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
+	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
+	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
 # The noUI targets are kind of hacky because they take the core package with the complete Adam and 
 # tries to filter out unrelated classes.
-mc_deploy_noUI: $(BACKEND_TARGETS) setDeployMC interface
+mc_deploy_noUI: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) setDeployMC backend
 	mkdir -p deploy
 	echo "$(call create_bashscript, _mc)" > ./deploy/adam_mc
 	chmod +x ./deploy/adam_mc
-	cp ./core/adam_mc.jar ./deploy/Adam_mc.jar
+	cp ./adammc/adam_mc.jar ./deploy/Adam_mc.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
-synt_deploy_noUI: $(BACKEND_TARGETS) setDeploySynt interface
+synt_deploy_noUI: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) setDeploySynt backend
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript, _synt)" > ./deploy/adam_synt
 	chmod +x ./deploy/adam_synt
-	cp ./core/adam_synt.jar ./deploy/Adam_synt.jar
+	cp ./adamsynt/adam_synt.jar ./deploy/Adam_synt.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
-	cp ./lib/quabs_mac ./deploy/lib/quabs_mac
-	cp ./lib/quabs_unix ./deploy/lib/quabs_unix
-	cp ./lib/javaBDD/libcudd.so ./deploy/lib/libcudd.so
-	cp ./lib/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
+	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
+	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
-bounded_deploy_noUI: $(BACKEND_TARGETS) setDeployBounded interface
+bounded_deploy_noUI: $(FRAMEWORK_TARGETS) petrigames bounded setDeployBounded backend
 	mkdir -p deploy
 	echo "$(call create_bashscript, _bounded)" > ./deploy/adam_bounded
 	chmod +x ./deploy/adam_bounded
-	cp ./core/adam_bounded.jar ./deploy/Adam_bounded.jar
+	cp ./synthesizer/boundedalgorithms/adam_bounded.jar ./deploy/Adam_bounded.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
+
+clean: setClean$(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) $(UI_TARGETS)
+	rm -r -f deploy
+	rm -r -f javadoc
+
+clean-all: setCleanAll $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) $(UI_TARGETS)
+	rm -r -f deploy
+	rm -r -f javadoc
 
 src_withlibs: clean-all
 	$(call generate_src, true)
