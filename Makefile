@@ -51,6 +51,10 @@ endef
 # targets
 all: deploy
 
+# git commands for all submodules
+status_all:
+	./status_all.sh $(DEPENDENCIES_FOLDERS)
+
 checkout_branch_all:
 	./checkout_branch.sh
 
