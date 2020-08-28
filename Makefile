@@ -1,3 +1,5 @@
+# @author Manuel Gieseking
+DEPENDENCIES_FOLDERS="libs,framework,logics,modelchecker,synthesizer,high-level,server-command-line-protocol,server-command-line,webinterface-backend,ui,adammc,adamsynt"
 # the build target
 FRAMEWORK_TARGETS = tools petrinetwithtransits
 MODELCHECKING_TARGETS = logics mc
@@ -54,6 +56,13 @@ checkout_branch_all:
 
 pull_all:
 	git submodule update --remote
+	git pull
+
+commit_all:
+	./commit_all.sh $(DEPENDENCIES_FOLDERS)
+
+push_all:
+	./push_all.sh $(DEPENDENCIES_FOLDERS)
 
 tools:
 	ant -buildfile ./framework/tools/build.xml $(t)
