@@ -49,6 +49,12 @@ endef
 # targets
 all: deploy
 
+checkout_branch_all:
+	./checkout_branch.sh
+
+pull_all:
+	git submodule update --remote
+
 tools:
 	ant -buildfile ./framework/tools/build.xml $(t)
 
