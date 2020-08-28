@@ -3,5 +3,5 @@
 if [ -z ${branch} ]; then
 	branch=master
 fi
-git submodule foreach --recursive git checkout $(branch)
-git checkout $(branch)
+git submodule foreach --recursive git checkout ${branch}
+git checkout ${branch}
