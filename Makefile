@@ -141,6 +141,9 @@ setDeployBounded:
 setStandalone:
 	$(eval t=jar-standalone)
 
+merge_all:
+	./merge_all.sh $(DEPENDENCIES_FOLDERS)
+
 javadoc:
 	ant javadoc
 
