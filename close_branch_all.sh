@@ -21,14 +21,14 @@ else
                 git tag -a "${tag_name}" -m "Closed branch: ${branch}"
                 git push --tags
                 git branch -d ${branch}
-                git push
+                git push origin :${branch}
                 cd ..
             fi
     done
     echo "%%%%%%%%%%%%%%%% MAIN-REPO: adam"
     git tag -a "${tag_name}" -m "Closed branch: ${branch}"
     git push --tags
-    git branch -d ${branch}
-    git push
+    git branch -D ${branch}
+    git push origin :${branch}
 fi
 
