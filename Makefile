@@ -1,5 +1,5 @@
 # @author Manuel Gieseking
-DEPENDENCIES_FOLDERS="libs,framework,logics,modelchecker,examples,synthesizer,high-level,server-command-line-protocol,server-command-line,webinterface-backend,ui,adammc,adamsynt"
+DEPENDENCIES_FOLDERS="libs,framework,logics,modelchecker,examples,synthesizer,boundedSynthesis,high-level,server-command-line-protocol,server-command-line,webinterface-backend,ui,adammc,adamsynt"
 # the build target
 FRAMEWORK_TARGETS = tools petrinetwithtransits
 MODELCHECKING_TARGETS = logics mc
@@ -109,7 +109,7 @@ petrigames:
 	ant -buildfile ./synthesizer/petriGames/build.xml $(t)
 
 bounded:
-	ant -buildfile ./synthesizer/boundedalgorithms/build.xml $(t)
+	ant -buildfile ./boundedSynthesis/build.xml $(t)
 
 bdd:
 	ant -buildfile ./synthesizer/symbolicalgorithms/bddapproach/build.xml $(t)
@@ -212,7 +212,7 @@ mc_deploy_noUI: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) setDeployMC backen
 	mkdir -p deploy
 	echo "$(call create_bashscript, _mc)" > ./deploy/adam_mc
 	chmod +x ./deploy/adam_mc
-	cp ./adammc/adam_mc.jar ./deploy/Adam_mc.jar
+	cp ./webinterface-backend/adam_mc.jar ./deploy/Adam_mc.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
 synt_deploy_noUI: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) setDeploySynt backend
@@ -220,7 +220,7 @@ synt_deploy_noUI: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) setDeploySynt back
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript, _synt)" > ./deploy/adam_synt
 	chmod +x ./deploy/adam_synt
-	cp ./adamsynt/adam_synt.jar ./deploy/Adam_synt.jar
+	cp ./webinterface-backend/adam_synt.jar ./deploy/Adam_synt.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
 	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
@@ -231,7 +231,7 @@ bounded_deploy_noUI: $(FRAMEWORK_TARGETS) petrigames bounded setDeployBounded ba
 	mkdir -p deploy
 	echo "$(call create_bashscript, _bounded)" > ./deploy/adam_bounded
 	chmod +x ./deploy/adam_bounded
-	cp ./synthesizer/boundedalgorithms/adam_bounded.jar ./deploy/Adam_bounded.jar
+	cp ./webinterface-backend/adam_bounded.jar ./deploy/Adam_bounded.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
 clean: setClean$(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) $(UI_TARGETS)
