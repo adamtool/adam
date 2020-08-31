@@ -1,3 +1,7 @@
+# Checkout with all submodules
+ git clone --recursive git@github.com:adamtool/adam.git <foldername>
+ make checkout_branch_all
+
 Create a file ADAM.properties with the following lines, just adapted to your own paths:
 
 libraryFolder=/home/thewn/petrigames/mercurial/data/impl/lib
