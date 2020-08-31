@@ -17,6 +17,7 @@ else
                 cd ..
             fi
     done
+    echo "%%%%%%%%%%%%%%%% MAIN-REPO: adam"
 	git commit -a -m "$msg" # main repo
 fi
 

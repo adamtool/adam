@@ -46,3 +46,6 @@
 	path = libs
 	url = git@github.com:adamtool/libs.git
 	update = merge
+[submodule "examples"]
+	path = examples
+	url = git@github.com:adamtool/examples.git
