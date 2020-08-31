@@ -56,10 +56,10 @@ status_all:
 	./status_all.sh $(DEPENDENCIES_FOLDERS)
 
 checkout_branch_all:
-	./checkout_branch.sh
+	./checkout_branch_all.sh
 
 pull_all:
-# this command leave the submodule with detached heads ...
+# the following command leaves the submodule with detached heads. Thus, we use an own script
 #	git submodule update --remote
 #	git pull
 	./pull_all.sh $(DEPENDENCIES_FOLDERS)
