@@ -71,7 +71,7 @@ commit_all:
 	./commit_all.sh $(DEPENDENCIES_FOLDERS)
 
 # options="<options>" allows to add options to the git push command, e.g.,
-# make push_all options="origin test" to push the first time into a new branch.
+# make push_all options="--set-upstream origin test" to push the first time into a new branch test and link this to remote branch.
 push_all:
 	./push_all.sh $(DEPENDENCIES_FOLDERS)
 
