@@ -30,6 +30,14 @@ t=jar
 .PHONY: bounded_deploy_noUI
 #.PHONY: javadoc
 .PHONY: examples
+# git targets
+.PHONY: status_all
+.PHONY: checkout_branch_all
+.PHONY: close_branch_all
+.PHONY: pull_all
+.PHONY: commit_all
+.PHONY: merge_all
+.PHONY: push_all
 
 # functions
 create_bashscript = \#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/Adam$(strip $(1)).jar\" ] ; then\n\techo \"Adam$(strip $(1)).jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/Adam$(strip $(1)).jar\" \"\044@\"
@@ -60,6 +68,12 @@ status_all:
 checkout_branch_all:
 	./checkout_branch_all.sh
 
+# branch=<name> must be set and specifies the branch which should be closed.
+# tag=<tag> can be set to name the tag which is given the closing commit.
+#Attention: the branch is deleted and only a tag links to the commit.
+close_branch_all:
+	./close_branch_all.sh $(DEPENDENCIES_FOLDERS)
+
 pull_all:
 # the following command leaves the submodule with detached heads. Thus, we use an own script
 #	git submodule update --remote
@@ -69,6 +83,10 @@ pull_all:
 # msg="<msg>" must be set to define a commit message.
 commit_all:
 	./commit_all.sh $(DEPENDENCIES_FOLDERS)
+
+# branch=<name> must be set and specifies the branch which should be merged.
+merge_all:
+	./merge_all.sh $(DEPENDENCIES_FOLDERS)
 
 # options="<options>" allows to add options to the git push command, e.g.,
 # make push_all options="--set-upstream origin test" to push the first time into a new branch test and link this to remote branch.
@@ -145,9 +163,6 @@ setDeployBounded:
 
 setStandalone:
 	$(eval t=jar-standalone)
-
-merge_all:
-	./merge_all.sh $(DEPENDENCIES_FOLDERS)
 
 javadoc:
 	ant javadoc
