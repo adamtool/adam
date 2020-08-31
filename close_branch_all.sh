@@ -28,7 +28,7 @@ else
     echo "%%%%%%%%%%%%%%%% MAIN-REPO: adam"
     git tag -a "${tag_name}" -m "Closed branch: ${branch}"
     git push --tags
-    git branch -D ${branch}
+    git branch -d ${branch}
     git push origin :${branch}
 fi
 
