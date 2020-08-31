@@ -51,10 +51,12 @@ endef
 # targets
 all: deploy
 
-# git commands for all submodules
+######################## git commands for all submodules
 status_all:
 	./status_all.sh $(DEPENDENCIES_FOLDERS)
 
+# branch=<name> specifies the branch which should be checked out. Default: branch=master.
+# new=<name> creates a new branch with the name
 checkout_branch_all:
 	./checkout_branch_all.sh
 
@@ -64,6 +66,7 @@ pull_all:
 #	git pull
 	./pull_all.sh $(DEPENDENCIES_FOLDERS)
 
+# msg="<msg>" must be set to define a commit message.
 commit_all:
 	./commit_all.sh $(DEPENDENCIES_FOLDERS)
 
