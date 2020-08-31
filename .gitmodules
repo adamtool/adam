@@ -48,3 +48,6 @@
 [submodule "boundedSynthesis"]
 	path = boundedSynthesis
 	url = git@github.com:adamtool/boundedSynthesis.git
+[submodule "synthesizer"]
+	path = synthesizer
+	url = git@github.com:adamtool/synthesizer.git
