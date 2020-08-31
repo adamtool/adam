@@ -10,10 +10,10 @@ for dep in "${dep_folders[@]}"	# all dependencies
             echo "The dependency is missing. Please execute 'git submodule update --init "$dep"' first."
         else
             cd $dep                
-            git push
+            git push ${options}
             cd ..
         fi
 done
 
 echo "%%%%%%%%%%%%%%%% MAIN-REPO: adam"
-git push
+git push ${options}

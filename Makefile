@@ -51,10 +51,12 @@ endef
 # targets
 all: deploy
 
-# git commands for all submodules
+######################## git commands for all submodules
 status_all:
 	./status_all.sh $(DEPENDENCIES_FOLDERS)
 
+# branch=<name> specifies the branch which should be checked out. Default: branch=master.
+# new=<name> creates a new branch with the name
 checkout_branch_all:
 	./checkout_branch_all.sh
 
@@ -64,9 +66,12 @@ pull_all:
 #	git pull
 	./pull_all.sh $(DEPENDENCIES_FOLDERS)
 
+# msg="<msg>" must be set to define a commit message.
 commit_all:
 	./commit_all.sh $(DEPENDENCIES_FOLDERS)
 
+# options="<options>" allows to add options to the git push command, e.g.,
+# make push_all options="--set-upstream origin test" to push the first time into a new branch test and link this to remote branch.
 push_all:
 	./push_all.sh $(DEPENDENCIES_FOLDERS)
 
