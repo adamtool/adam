@@ -26,10 +26,6 @@
 	path = high-level
 	url = git@github.com:adamtool/high-level.git
 	update = merge
-[submodule "synthesizer"]
-	path = synthesizer
-	url = git@github.com:adamtool/synthesizer.git
-	update = merge
 [submodule "ui"]
 	path = ui
 	url = git@github.com:adamtool/ui.git
