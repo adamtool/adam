@@ -1,5 +1,8 @@
-# @author Manuel Gieseking
+##### @author Manuel Gieseking
+# the folders of all submodules. This is used for all the pull, commit, merge, etc. commands of git
 DEPENDENCIES_FOLDERS="libs,framework,logics,modelchecker,examples,synthesizer,boundedSynthesis,high-level,server-command-line-protocol,server-command-line,webinterface-backend,ui,adammc,adamsynt"
+# if you only want to consider a subset of the submodules for pulling (e.g., stay on another branch). Used by pull_subset.
+DEPENDENCIES_SUBSET=""
 # the build target
 FRAMEWORK_TARGETS = tools petrinetwithtransits
 MODELCHECKING_TARGETS = logics mc
@@ -35,9 +38,13 @@ t=jar
 .PHONY: checkout_branch_all
 .PHONY: close_branch_all
 .PHONY: pull_all
+.PHONY: pl
+.PHONY: pull_subset
 .PHONY: commit_all
+.PHONY: co
 .PHONY: merge_all
 .PHONY: push_all
+.PHONY: ph
 
 # functions
 create_bashscript = \#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/Adam$(strip $(1)).jar\" ] ; then\n\techo \"Adam$(strip $(1)).jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -jar \"\044BASEDIR/Adam$(strip $(1)).jar\" \"\044@\"
@@ -80,9 +87,17 @@ pull_all:
 #	git pull
 	./pull_all.sh $(DEPENDENCIES_FOLDERS)
 
+pl: pull_all
+
+pull_subset:
+	./pull_all.sh $(DEPENDENCIES_SUBSET)
+
 # msg="<msg>" must be set to define a commit message.
 commit_all:
 	./commit_all.sh $(DEPENDENCIES_FOLDERS)
+
+# msg="<msg>" must be set to define a commit message.
+co: commit_all
 
 # branch=<name> must be set and specifies the branch which should be merged.
 merge_all:
@@ -92,6 +107,8 @@ merge_all:
 # make push_all options="--set-upstream origin test" to push the first time into a new branch test and link this to remote branch.
 push_all:
 	./push_all.sh $(DEPENDENCIES_FOLDERS)
+
+ph: push_all
 
 tools:
 	ant -buildfile ./framework/tools/build.xml $(t)
