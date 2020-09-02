@@ -1,12 +1,12 @@
 ##### @author Manuel Gieseking
 # the folders of all submodules. This is used for all the pull, commit, merge, etc. commands of git
-DEPENDENCIES_FOLDERS="libs,framework,logics,modelchecker,examples,synthesizer,boundedSynthesis,high-level,server-command-line-protocol,server-command-line,webinterface-backend,ui,adammc,adamsynt"
+DEPENDENCIES_FOLDERS="libs,framework,logics,modelchecker,examples,synthesizer,boundedSynthesis,synthesisDistrEnv,high-level,server-command-line-protocol,server-command-line,webinterface-backend,ui,adammc,adamsynt"
 # if you only want to consider a subset of the submodules for pulling (e.g., stay on another branch). Used by pull_subset.
 DEPENDENCIES_SUBSET=""
 # the build target
 FRAMEWORK_TARGETS = tools petrinetwithtransits
 MODELCHECKING_TARGETS = logics mc
-SYNTHESIZER_TARGETS = petrigames symbolic bounded highlevel
+SYNTHESIZER_TARGETS = petrigames symbolic bounded distrEnv highlevel
 UI_TARGETS = protocol server ui adammc adamsynt adam
 t=jar
 
@@ -20,6 +20,7 @@ t=jar
 .PHONY: symbolic
 .PHONY: bdd
 .PHONY: mtbdd
+.PHONY: distrEnv
 .PHONY: highlevel
 .PHONY: backend
 .PHONY: server
@@ -135,6 +136,9 @@ mtbdd:
 	ant -buildfile ./synthesizer/symbolicalgorithms/mtbddapproach/build.xml $(t)
 
 symbolic: bdd mtbdd
+
+distrEnv:
+	ant -buildfile ./synthesisDistrEnv/build.xml $(t)
 
 highlevel:
 	ant -buildfile ./high-level/build.xml $(t)

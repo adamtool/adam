@@ -51,3 +51,6 @@
 [submodule "synthesizer"]
 	path = synthesizer
 	url = git@github.com:adamtool/synthesizer.git
+[submodule "synthesisDistrEnv"]
+	path = synthesisDistrEnv
+	url = git@github.com:adamtool/synthesisDistrEnv.git
