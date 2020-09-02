@@ -13,6 +13,7 @@ t=jar
 # should be executed no matter if a file with the same name exists or not
 .PHONY: tools
 .PHONY: petrinetwithtransits
+.PHONY: framework
 .PHONY: logics
 .PHONY: mc
 .PHONY: petrigames
@@ -20,6 +21,7 @@ t=jar
 .PHONY: symbolic
 .PHONY: bdd
 .PHONY: mtbdd
+.PHONY: synthesizer
 .PHONY: distrEnv
 .PHONY: highlevel
 .PHONY: backend
@@ -111,11 +113,14 @@ push_all:
 
 ph: push_all
 
+# submodules targets
 tools:
 	ant -buildfile ./framework/tools/build.xml $(t)
 
 petrinetwithtransits:
 	ant -buildfile ./framework/petrinetWithTransits/build.xml $(t)
+
+framework: $(FRAMEWORK_TARGETS)
 
 logics:
 	ant -buildfile ./logics/build.xml $(t)
@@ -136,6 +141,8 @@ mtbdd:
 	ant -buildfile ./synthesizer/symbolicalgorithms/mtbddapproach/build.xml $(t)
 
 symbolic: bdd mtbdd
+
+synthesizer: petriGames symbolic
 
 distrEnv:
 	ant -buildfile ./synthesisDistrEnv/build.xml $(t)
