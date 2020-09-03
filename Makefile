@@ -142,7 +142,7 @@ mtbdd:
 
 symbolic: bdd mtbdd
 
-synthesizer: petriGames symbolic
+synthesizer: petrigames symbolic
 
 distrEnv:
 	ant -buildfile ./synthesisDistrEnv/build.xml $(t)
