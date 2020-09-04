@@ -8,7 +8,7 @@ FRAMEWORK_TARGETS = tools petrinetwithtransits
 MODELCHECKING_TARGETS = logics mc
 SYNTHESIZER_TARGETS = petrigames symbolic bounded distrEnv highlevel
 UI_TARGETS = protocol server ui adammc adamsynt adam
-t=jar
+t=javac
 
 # should be executed no matter if a file with the same name exists or not
 .PHONY: tools
@@ -35,6 +35,16 @@ t=jar
 .PHONY: synt_deploy_noUI
 .PHONY: bounded_deploy_noUI
 #.PHONY: javadoc
+.PHONY: setJavac
+.PHONY: setJar
+.PHONY: setDeploy
+.PHONY: setDeployMC
+.PHONY: setDeploySynt
+.PHONY: setDeployBounded
+.PHONY: setStandalone
+.PHONY: setClean
+.PHONY: setCleanAll
+
 .PHONY: examples
 # git targets
 .PHONY: status_all
@@ -170,6 +180,9 @@ adamsynt:
 
 adam:
 	ant -buildfile ./adam/build.xml $(t)
+
+setJavac:
+	$(eval t=javac)
 
 setClean:
 	$(eval t=clean)
