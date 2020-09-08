@@ -1,4 +1,5 @@
-##### @author Manuel Gieseking
+## @author Manuel Gieseking
+
 # the folders of all submodules. This is used for all the pull, commit, merge, etc. commands of git
 DEPENDENCIES_FOLDERS="libs,framework,logics,modelchecker,examples,synthesizer,boundedSynthesis,synthesisDistrEnv,high-level,server-command-line-protocol,server-command-line,webinterface-backend,ui,adammc,adamsynt"
 # if you only want to consider a subset of the submodules for pulling (e.g., stay on another branch). Used by pull_subset.
