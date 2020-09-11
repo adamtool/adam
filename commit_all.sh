@@ -1,23 +1,27 @@
 #!/bin/bash
 # @author Manuel Gieseking
 
+# import the coloring functions for the texts
+source ./echoColoredTexts.sh
+
 IFS=',' read -r -a dep_folders <<< "$1"
 
+printColored "> Commit all changes..."
 if [[ -z ${msg} ]]; then
-	echo 'You have to give a commit message with msg="<message>".'
+	printError 'You have to give a commit message with msg="<message>".'
 else 
     for dep in "${dep_folders[@]}"	# all dependencies
 	    do	
-		    echo "%%%%%%%%%%%%%%%% DEPENDENCY: $dep"
+		    printColored "%%%%%%%%%%%%%%%% DEPENDENCY: $dep" $blue
 		    if [ ! -f "$dep/.git" ]; then
-                echo "The dependency is missing. Please execute 'git submodule update --init "$dep"' first."
+                printError "The dependency is missing. Please execute 'git submodule update --init "$dep"' first."
             else
                 cd $dep                
                 git commit -a -m "$msg"
                 cd ..
             fi
     done
-    echo "%%%%%%%%%%%%%%%% MAIN-REPO: adam"
+    printColored "%%%%%%%%%%%%%%%% MAIN-REPO: adam" $blue
 	git commit -a -m "$msg" # main repo
 fi
 

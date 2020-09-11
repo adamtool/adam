@@ -1,13 +1,17 @@
 #!/bin/bash
 # @author Manuel Gieseking
 
+# import the coloring functions for the texts
+source ./echoColoredTexts.sh
+
 IFS=',' read -r -a dep_folders <<< "$1"
 
+printColored "> Pushing repositories..."
 for dep in "${dep_folders[@]}"	# all dependencies
     do	
-	    echo "%%%%%%%%%%%%%%%% DEPENDENCY: $dep"
+	    printColored "%%%%%%%%%%%%%%%% DEPENDENCY: $dep" $blue
 	    if [ ! -f "$dep/.git" ]; then
-            echo "The dependency is missing. Please execute 'git submodule update --init "$dep"' first."
+            printError "The dependency is missing. Please execute 'git submodule update --init "$dep"' first."
         else
             cd $dep                
             git push ${options}
@@ -15,5 +19,5 @@ for dep in "${dep_folders[@]}"	# all dependencies
         fi
 done
 
-echo "%%%%%%%%%%%%%%%% MAIN-REPO: adam"
+printColored "%%%%%%%%%%%%%%%% MAIN-REPO: adam" $blue
 git push ${options}
