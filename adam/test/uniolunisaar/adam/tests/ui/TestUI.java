@@ -1,4 +1,4 @@
-package uniolunisaar.adam.ui;
+package uniolunisaar.adam.tests.ui;
 
 import uniolunisaar.adam.logic.ui.cl.AdamUI;
 import uniolunisaar.adam.main.ui.cl.AdamComplete;
