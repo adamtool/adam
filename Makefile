@@ -229,10 +229,10 @@ synt_deploy: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy s
 	cp ./synthesizer/adamsynt/adam_synt.jar ./deploy/AdamSYNT.jar
 	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
-	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
-	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
-	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
-	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+#	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
+#	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
+#	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+#	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
 deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy server adamsynt adammc adam
 	mkdir -p deploy
@@ -243,10 +243,10 @@ deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) ui 
 	cp ./adam/adam_adam.jar ./deploy/Adam.jar
 	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
-	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
-	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
-	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
-	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+#	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
+#	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
+#	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+#	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
 # The noUI targets are kind of hacky because they take the core package with the complete Adam and 
 # tries to filter out unrelated classes.
@@ -264,10 +264,10 @@ synt_deploy_noUI: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) setDeploySynt back
 	chmod +x ./deploy/adam_synt
 	cp ./webinterface-backend/adam_synt.jar ./deploy/Adam_synt.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
-	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
-	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
-	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
-	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
+#	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
+#	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
+#	cp ./libs/javaBDD/libcudd.so ./deploy/lib/libcudd.so
+#	cp ./libs/javaBDD/libbuddy.so ./deploy/lib/libbuddy.so
 
 bounded_deploy_noUI: $(FRAMEWORK_TARGETS) petrigames bounded setDeployBounded backend
 	mkdir -p deploy
