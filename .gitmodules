@@ -50,3 +50,6 @@
 [submodule "synthesisDistrEnv"]
 	path = synthesisDistrEnv
 	url = git@github.com:adamtool/synthesisDistrEnv.git
+[submodule "libs"]
+	path = libs
+	url = git@github.com:adamtool/libs.git
