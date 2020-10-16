@@ -30,6 +30,10 @@ import uniolunisaar.adam.logic.ui.cl.modules.synthesis.solver.WinStrat;
 import uniolunisaar.adam.logic.ui.cl.modules.benchmarks.modelchecking.BenchmarkCAV2019;
 import uniolunisaar.adam.logic.ui.cl.modules.benchmarks.synthesis.BenchmarkHL2019;
 import uniolunisaar.adam.logic.ui.cl.modules.benchmarks.synthesis.BenchmarkRvG2019;
+import uniolunisaar.adam.logic.ui.cl.modules.converter.modelchecking.SDN2Dot;
+import uniolunisaar.adam.logic.ui.cl.modules.converter.modelchecking.SDN2Pdf;
+import uniolunisaar.adam.logic.ui.cl.modules.modelchecking.checker.PetriNetWithTransitsModelchecker;
+import uniolunisaar.adam.logic.ui.cl.modules.modelchecking.checker.SDNModelchecker;
 
 /**
  *
@@ -41,16 +45,20 @@ public class ModulesAll extends Modules {
         // Converter
         new Pn2Pdf(),
         new Pn2Unfolding(),
-        new Pg2Dot(),
         new Pnwt2Dot(),
-        new Pg2Pdf(),
+        new Pg2Dot(),
+        new SDN2Dot(),
         new Pnwt2Pdf(),
+        new Pg2Pdf(),
+        new SDN2Pdf(),
         new Pg2Tikz(),
         // Solver
         new ExWinStrat(),
         new WinStrat(),
         // Modelchecker
         new PetrinetModelchecker(),
+        new PetriNetWithTransitsModelchecker(),
+        new SDNModelchecker(),
         // Benchmark
         new Benchmark(),
         new BenchmarkSynt2017(),
