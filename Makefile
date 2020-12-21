@@ -226,7 +226,7 @@ synt_deploy: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy s
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript, SYNT)" > ./deploy/AdamSYNT
 	chmod +x ./deploy/AdamSYNT
-	cp ./synthesizer/adamsynt/adam_synt.jar ./deploy/AdamSYNT.jar
+	cp ./adamsynt/adam_synt.jar ./deploy/AdamSYNT.jar
 	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 #	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
