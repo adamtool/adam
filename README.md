@@ -8,7 +8,7 @@ It combines the tools [AdamMC](https://github.com/adamtool/adammc) and [AdamSYNT
 Dependencies:
 -------------
 This module depends on the 
-- the repository as submodules: [libs](https://github.com/adamtool/libs), [examples](https://github.com/adamtool/examples), [framework](https://github.com/adamtool/framework), [logics](https://github.com/adamtool/logics), [modelchecker](https://github.com/adamtool/modelchecker), [synthesizer](https://github.com/adamtool/synthesizer), [high-level](https://github.com/adamtool/high-level), [webinterface-backend](https://github.com/adamtool/webinterface-backend).
+- the repository as submodules: [libs](https://github.com/adamtool/libs), [examples](https://github.com/adamtool/examples), [framework](https://github.com/adamtool/framework), [logics](https://github.com/adamtool/logics), [modelchecker](https://github.com/adamtool/modelchecker), [adammc](https://github.com/adamtool/adammc), [synthesizer](https://github.com/adamtool/synthesizer), [boundedSynthesis](https://github.com/adamtool/boundedsynthesis), [synthesisDistrEnv](https://github.com/adamtool/synthesisDistrEnv), [high-level](https://github.com/adamtool/high-level), [adamsynt](https://github.com/adamtool/adamsynt), [server-command-line](https://github.com/adamtool/server-command-line), [server-command-protocol](https://github.com/adamtool/server-command-line-protocol), [webinterface-backend](https://github.com/adamtool/webinterface-backend), [ui](https://github.com/adamtool/ui).
 - the external tools: [McHyper](https://github.com/reactive-systems/MCHyper), [AigerTools](http://fmv.jku.at/aiger/), [ABC](https://people.eecs.berkeley.edu/~alanmi/abc/).
 
 # Checkout with all submodules
@@ -32,13 +32,6 @@ Contains:
   * Petri nets with transits / Flow-LTL to Petri nets and LTL
   * Petri nets with transits / Flow-CTL to Petri nets and LTL
   * Petri nets to Circuit
-  
-Integration:
-------------
-This module can be used as separate library and
-- is integrated in: [adam](https://github.com/adamtool/adam), [adammc](https://github.com/adamtool/adammc),
-- contains the packages: modelchecking,
-- depends on the repos: [libs](https://github.com/adamtool/libs), [framework](https://github.com/adamtool/framework), [logics](https://github.com/adamtool/logics).
 
 Related Publications:
 ---------------------
