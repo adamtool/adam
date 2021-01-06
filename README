@@ -1,6 +1,0 @@
-# Checkout with all submodules
- git clone --recursive git@github.com:adamtool/adam.git <foldername>
- make checkout_branch_all
-
-Create a file ADAM.properties
-
