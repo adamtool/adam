@@ -61,7 +61,7 @@ t=javac
 .PHONY: ph
 
 # functions
-create_bashscript = \#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/Adam$(strip $(1)).jar\" ] ; then\n\techo \"Adam$(strip $(1)).jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -Dfile.encoding=UTF-8 -jar \"\044BASEDIR/Adam$(strip $(1)).jar\" \"\044@\"
+create_bashscript = \#!/bin/bash\n\nBASEDIR=\"\044(dirname \044\060)\"\n\nif [ ! -f \"\044BASEDIR/adam$(strip $(1)).jar\" ] ; then\n\techo \"adam$(strip $(1)).jar not found! Run 'ant jar' first!\" >&2\n\texit 127\nfi\n\njava -DPROPERTY_FILE=./ADAM.properties -Dfile.encoding=UTF-8 -jar \"\044BASEDIR/adam$(strip $(1)).jar\" \"\044@\"
 
 define generate_src
 	mkdir -p adam_src
@@ -216,17 +216,17 @@ backend_deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARG
 
 mc_deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) ui setDeploy adammc
 	mkdir -p deploy
-	echo "$(call create_bashscript, MC)" > ./deploy/AdamMC
-	chmod +x ./deploy/AdamMC
-	cp ./adammc/adam_mc.jar ./deploy/AdamMC.jar
+	echo "$(call create_bashscript, MC)" > ./deploy/adamMC
+	chmod +x ./deploy/adamMC
+	cp ./adammc/adam_mc.jar ./deploy/adamMC.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
 synt_deploy: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy server adamsynt
 	mkdir -p deploy
 	mkdir -p deploy/lib
-	echo "$(call create_bashscript, SYNT)" > ./deploy/AdamSYNT
-	chmod +x ./deploy/AdamSYNT
-	cp ./adamsynt/adam_synt.jar ./deploy/AdamSYNT.jar
+	echo "$(call create_bashscript, SYNT)" > ./deploy/adamSYNT
+	chmod +x ./deploy/adamSYNT
+	cp ./adamsynt/adam_synt.jar ./deploy/adamSYNT.jar
 	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 #	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
@@ -237,10 +237,10 @@ synt_deploy: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy s
 deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) ui protocol setDeploy server adamsynt adammc adam
 	mkdir -p deploy
 	mkdir -p deploy/lib
-	echo "$(call create_bashscript)" > ./deploy/Adam
+	echo "$(call create_bashscript)" > ./deploy/adam
 #	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
-	chmod +x ./deploy/Adam
-	cp ./adam/adam_adam.jar ./deploy/Adam.jar
+	chmod +x ./deploy/adam
+	cp ./adam/adam_adam.jar ./deploy/adam.jar
 	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 #	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
@@ -254,7 +254,7 @@ mc_deploy_noUI: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) setDeployMC backen
 	mkdir -p deploy
 	echo "$(call create_bashscript, _mc)" > ./deploy/adam_mc
 	chmod +x ./deploy/adam_mc
-	cp ./webinterface-backend/adam_mc.jar ./deploy/Adam_mc.jar
+	cp ./webinterface-backend/adam_mc.jar ./deploy/adam_mc.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
 synt_deploy_noUI: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) setDeploySynt backend
@@ -262,7 +262,7 @@ synt_deploy_noUI: $(FRAMEWORK_TARGETS) $(SYNTHESIZER_TARGETS) setDeploySynt back
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript, _synt)" > ./deploy/adam_synt
 	chmod +x ./deploy/adam_synt
-	cp ./webinterface-backend/adam_synt.jar ./deploy/Adam_synt.jar
+	cp ./webinterface-backend/adam_synt.jar ./deploy/adam_synt.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 #	cp ./libs/quabs_mac ./deploy/lib/quabs_mac
 #	cp ./libs/quabs_unix ./deploy/lib/quabs_unix
@@ -273,7 +273,7 @@ bounded_deploy_noUI: $(FRAMEWORK_TARGETS) petrigames bounded setDeployBounded ba
 	mkdir -p deploy
 	echo "$(call create_bashscript, _bounded)" > ./deploy/adam_bounded
 	chmod +x ./deploy/adam_bounded
-	cp ./webinterface-backend/adam_bounded.jar ./deploy/Adam_bounded.jar
+	cp ./webinterface-backend/adam_bounded.jar ./deploy/adam_bounded.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
 clean: setClean$(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) $(UI_TARGETS)
