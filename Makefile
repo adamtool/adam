@@ -276,7 +276,7 @@ bounded_deploy_noUI: $(FRAMEWORK_TARGETS) petrigames bounded setDeployBounded ba
 	cp ./webinterface-backend/adam_bounded.jar ./deploy/adam_bounded.jar
 	cp ./ADAM.properties ./deploy/ADAM.properties
 
-clean: setClean$(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) $(UI_TARGETS)
+clean: setClean $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) $(UI_TARGETS)
 	rm -r -f deploy
 	rm -r -f javadoc
 
