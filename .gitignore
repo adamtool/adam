@@ -2,6 +2,9 @@
 ADAM.properties
 deploy/
 
+################## Texteditor related
+*~
+
 ################## JAVA related
 # Compiled class file
 *.class
