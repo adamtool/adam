@@ -8,6 +8,7 @@ ${dependenciesfolder}/synthesizer/petriGames/classes
 ${dependenciesfolder}/synthesizer/symbolicalgorithms/bddapproach/classes
 ${dependenciesfolder}/synthesizer/symbolicalgorithms/mtbddapproach/classes
 ${dependenciesfolder}/boundedSynthesis/classes
+${dependenciesfolder}/server-command-line-protocol/classes
 ${dependenciesfolder}/high-level/classes
 ${dependenciesfolder}/adamsynt/classes
 ${libfolder}/commons-io-2.4/commons-io-2.4.jar

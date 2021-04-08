@@ -238,7 +238,6 @@ deploy: $(FRAMEWORK_TARGETS) $(MODELCHECKING_TARGETS) $(SYNTHESIZER_TARGETS) ui 
 	mkdir -p deploy
 	mkdir -p deploy/lib
 	echo "$(call create_bashscript)" > ./deploy/adam
-#	echo  $(ADAM_BASHSCRIPT) > ./deploy/adam
 	chmod +x ./deploy/adam
 	cp ./adam/adam_adam.jar ./deploy/adam.jar
 	cp ./server-command-line/adam_server.jar ./deploy/adam_server.jar
